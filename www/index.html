@@ -1,0 +1,3214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tailor Billing App</title>
+  <style>
+    :root {
+      --bg: #f5f3ef;
+      --card: #ffffff;
+      --ink: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --brand: #7c2d12;
+      --brand-dark: #5c1f0a;
+      --brand-soft: #fff7ed;
+      --brand-tint: #ffedd5;
+      --brand-border: #fdba74;
+      --brand-accent: #f97316;
+      --brand-subtext: #fed7aa;
+      --emerald: #047857;
+      --emerald-soft: #ecfdf5;
+      --danger: #dc2626;
+      --danger-soft: #fef2f2; 
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 12px;
+    }
+
+    /* Header with Transparent Embroidery Watermark Design */
+    .topbar {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand) 100%);
+      color: #fff;
+      border-radius: 20px;
+      padding: 20px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      margin-bottom: 18px;
+    }
+    .topbar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.16;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120' fill='none'%3E%3Ccircle cx='60' cy='60' r='44' stroke='%23ffffff' stroke-width='1.3' stroke-dasharray='4 4'/%3E%3Ccircle cx='60' cy='60' r='26' stroke='%23ffffff' stroke-width='1.1'/%3E%3Cpath d='M60 12 C68 32, 88 52, 108 60 C88 68, 68 88, 60 108 C52 88, 32 68, 12 60 C32 52, 52 32, 60 12 Z' stroke='%23ffffff' stroke-width='1.2'/%3E%3Cpath d='M26 26 C44 40, 44 80, 26 94 M94 26 C76 40, 76 80, 94 94' stroke='%23ffffff' stroke-width='1' stroke-dasharray='2 3'/%3E%3Ccircle cx='60' cy='60' r='5' fill='%23ffffff'/%3E%3C/svg%3E");
+      background-size: 96px 96px;
+      background-repeat: repeat;
+      pointer-events: none;
+    }
+    .topbar > * {
+      position: relative;
+      z-index: 1;
+    }
+    .topbar h1 {
+      margin: 0;
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .topbar p {
+      margin: 4px 0 0;
+      font-size: 0.85rem;
+      color: var(--brand-subtext);
+      font-weight: 500;
+    }
+    .topbar .btn-glass {
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      color: #ffffff;
+      border-radius: 11px;
+    }
+    .topbar .btn-glass:hover {
+      background: rgba(255, 255, 255, 0.28);
+      transform: translateY(-1px);
+    }
+
+    /* Segmented Tabs */
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 6px;
+      border-radius: 16px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      margin-bottom: 18px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+    }
+    .tab-btn {
+      border: 0;
+      background: transparent;
+      padding: 11px 16px;
+      border-radius: 11px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .tab-btn:hover:not(.active) {
+      color: var(--ink);
+      background: rgba(15, 23, 42, 0.04);
+    }
+    .tab-btn.active {
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.16);
+    }
+
+    .hidden { display: none !important; }
+
+    /* Modern Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(15, 23, 42, 0.07);
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 8px 24px rgba(15, 23, 42, 0.04);
+    }
+    .card-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .card-title {
+      margin: 0;
+      font-size: 1.08rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .card-sub {
+      margin: 2px 0 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    /* Form Grid & Modern Inputs */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+    label.field-label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    input[type="text"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 9px;
+      font-size: 0.85rem;
+      color: var(--ink);
+      background: #f8fafc;
+      outline: none;
+      transition: all 0.16s ease;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      background: #ffffff;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3.5px var(--brand-tint);
+    }
+
+    /* Modern Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 0;
+      border-radius: 11px;
+      padding: 10px 15px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.15s ease, background 0.15s ease;
+      text-decoration: none;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.12);
+    }
+    .btn-primary:hover {
+      background: var(--brand-dark);
+      transform: translateY(-1px);
+    }
+    .btn-emerald {
+      background: var(--emerald);
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(4, 120, 87, 0.18);
+    }
+    .btn-emerald:hover {
+      background: #065f46;
+      transform: translateY(-1px);
+    }
+    .btn-dark { background: #1e293b; color: #fff; }
+    .btn-dark:hover { background: #0f172a; transform: translateY(-1px); }
+    .btn-outline {
+      background: #fff;
+      color: var(--ink);
+      border: 1.5px solid #e2e8f0;
+    }
+    .btn-outline:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .btn-danger-soft {
+      background: var(--danger-soft);
+      color: var(--danger);
+      border: 1px solid #fecaca;
+      padding: 7px 11px;
+      font-size: 0.78rem;
+    }
+    .btn-danger-soft:hover { background: #fee2e2; }
+    .btn-sm { padding: 7px 11px; font-size: 0.78rem; border-radius: 9px; }
+    .btn-icon-size {
+      padding: 4px 8px !important;
+      font-size: 0.85rem !important;
+      line-height: 1 !important;
+      min-width: 34px;
+      height: 32px;
+      border-radius: 9px;
+      border: 1.5px solid var(--brand);
+      color: #ffffff;
+      background: var(--brand);
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.14);
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .btn-icon-size:hover {
+      background: var(--brand-dark);
+      border-color: var(--brand-dark);
+      transform: translateY(-1px);
+    }
+    .btn-icon-size svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .size-badge-mini {
+      background: #ffffff;
+      color: var(--brand);
+      border-radius: 999px;
+      padding: 1px 5px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    /* Collapsible Admin Sections */
+    .collapsible-header {
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s ease;
+    }
+    .collapsible-header:hover {
+      background: var(--brand-soft);
+      border-radius: 10px;
+    }
+    .collapse-chevron {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--brand);
+      background: var(--brand-soft);
+      border: 1px solid var(--brand-border);
+      padding: 5px 10px;
+      border-radius: 999px;
+    }
+
+    /* Billing Table */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+    }
+    table.bill-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 580px;
+    }
+    .bill-table th {
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      padding: 7px 4px;
+      text-align: left;
+      border-bottom: 2px solid var(--brand-border);
+      white-space: nowrap;
+    }
+    .bill-table td {
+      padding: 5px 4px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+    .bill-table tr:hover td { background: #fafafa; }
+    .num-col { text-align: right !important; }
+    .num-input {
+      width: 66px !important;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      padding: 6px 5px !important;
+      font-size: 0.83rem !important;
+    }
+    .item-input {
+      min-width: 105px;
+      padding: 6px 8px !important;
+      font-size: 0.84rem !important;
+    }
+    .row-total-cell {
+      font-weight: 800;
+      color: var(--ink);
+      text-align: right;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Image Capture Cell */
+    .img-cell {
+      width: 112px;
+    }
+    .img-capture-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .thumb-wrap {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .capture-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 9px;
+      border-radius: 8px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      border: 1px solid var(--brand-border);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .capture-label:hover { background: var(--brand-tint); }
+    .img-remove-btn {
+      border: 0;
+      background: #fee2e2;
+      color: #b91c1c;
+      border-radius: 6px;
+      width: 22px;
+      height: 22px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Highlighted Grand Total Footer */
+    .grand-total-panel {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+    .bill-actions-left {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 12px;
+    }
+    .total-highlight-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: linear-gradient(135deg, var(--brand-soft) 0%, var(--brand-tint) 100%);
+      border: 1.5px solid var(--brand-border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 6px 18px rgba(234, 88, 12, 0.14);
+    }
+    .payment-highlight-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #f8fafc;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+    .total-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
+      font-size: 0.92rem;
+    }
+    .total-row.discount-row {
+      border-top: 1px dashed var(--brand-border);
+      border-bottom: 1px dashed var(--brand-border);
+      padding: 9px 0;
+      margin: 4px 0;
+    }
+    .discount-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .discount-input-wrap span {
+      font-weight: 700;
+      color: var(--brand);
+    }
+    .discount-input-wrap input {
+      width: 115px;
+      text-align: right;
+      font-weight: 700;
+      border: 1.5px solid var(--brand-accent);
+      background: #fff;
+    }
+    .grand-final-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 8px;
+    }
+    .grand-final-label {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .grand-final-value {
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: var(--brand);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Admin Column Manager */
+    .col-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .col-item {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #f8fafc;
+    }
+    .col-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1 1 220px;
+    }
+    .col-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Size Chart Modal Rows */
+    .size-row {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #f8fafc;
+      margin-bottom: 8px;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 60;
+    }
+    .modal-card {
+      background: #fff;
+      border-radius: 16px;
+      max-width: 480px;
+      width: 100%;
+      padding: 18px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    }
+    .modal-card img.preview-full {
+      width: 100%;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 10px;
+      background: #f1f5f9;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      background: #0f172a;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+      z-index: 80;
+    }
+
+    /* Mobile & Tablet Compatibility */
+    @media (max-width: 768px) {
+      .container { padding: 10px; }
+      .topbar { padding: 14px; border-radius: 14px; gap: 10px; }
+      .topbar h1 { font-size: 1.12rem; }
+      .topbar p { font-size: 0.78rem; }
+      .topbar > div.no-print { width: 100%; display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 6px !important; }
+      .topbar > div.no-print .btn { padding: 9px 6px; font-size: 0.76rem; }
+      .card { padding: 13px; border-radius: 14px; margin-bottom: 12px; }
+      .tabs { position: sticky; top: 6px; z-index: 30; }
+      .tab-btn { padding: 10px 8px; font-size: 0.88rem; }
+      input[type="text"],
+      input[type="tel"],
+      input[type="date"],
+      input[type="number"],
+      select {
+        font-size: 16px !important;
+        min-height: 42px;
+      }
+      .btn { min-height: 42px; }
+      .btn-sm { min-height: 36px; }
+      .btn-icon-size { min-height: 32px !important; height: 32px !important; min-width: 34px !important; padding: 4px 7px !important; }
+
+      /* Transform wide table into clean mobile cards */
+      .table-wrap { border: 0; background: transparent; overflow-x: visible; }
+      table.bill-table,
+      .bill-table tbody { display: block; width: 100%; min-width: 0; }
+      .bill-table thead { display: none; }
+      .bill-table tr {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 14px;
+        padding: 12px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      }
+      .bill-table td {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 0;
+        border-bottom: 0;
+        text-align: left !important;
+      }
+      .bill-table td[data-label]::before {
+        content: attr(data-label);
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: var(--muted);
+      }
+      .bill-table td.col-idx {
+        grid-column: 1 / 2;
+        flex-direction: row;
+        align-items: center;
+        font-size: 0.9rem;
+      }
+      .bill-table td.col-idx::before { content: "Item #"; margin-right: 4px; color: var(--brand); }
+      .bill-table td.col-action {
+        grid-column: 2 / 3;
+        align-items: flex-end;
+        justify-content: center;
+      }
+      .bill-table td.img-cell {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+      .bill-table td.col-item {
+        grid-column: 1 / -1;
+      }
+      .item-input, .num-input { width: 100% !important; min-width: 0 !important; text-align: left !important; }
+      .bill-table td.row-total-cell {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 8px;
+        margin-top: 4px;
+        border-top: 1px dashed var(--brand-border);
+        font-size: 1rem;
+        color: var(--brand);
+      }
+      .grand-total-panel { grid-template-columns: 1fr; }
+      .bill-actions-left { grid-template-columns: 1fr; }
+      .total-highlight-box { max-width: 100%; width: 100%; }
+      .bill-actions-left { width: 100%; }
+      .bill-actions-left .btn { flex: 1 1 100%; }
+      .size-row { grid-template-columns: 1fr; }
+    }
+
+    /* Tablet refinement */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .container { padding: 12px; }
+      .num-input { width: 82px !important; }
+      .item-input { min-width: 130px; }
+    }
+
+    /* Print Styling */
+    @media print {
+      body { background: #fff; }
+      .no-print { display: none !important; }
+      .card { box-shadow: none; border: 1px solid #cbd5e1; }
+      .topbar { background: #fff !important; color: #000 !important; border: 2px solid #000; box-shadow: none; }
+      .topbar p { color: #333 !important; }
+      input { border: 0 !important; padding: 2px !important; background: transparent !important; }
+      .total-highlight-box { background: #fff7ed !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div id="appShell" class="container">
+    <!-- Shop Header -->
+    <header class="topbar">
+      <div>
+        <h1 id="headerShopName">Tailor Billing App</h1>
+        <p id="headerShopSub">Custom Embroidery, Maggam, Pico &amp; Falls, Tassels &amp; Tailoring</p>
+      </div>
+      <div class="no-print" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <button id="newBillBtn" type="button" class="btn btn-glass">+ New Bill</button>
+        <button id="saveBillBtn" type="button" class="btn btn-glass">💾 Save Bill</button>
+        <button id="printBillBtn" type="button" class="btn btn-glass">🖨️ Print / PDF</button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="tabs no-print">
+      <button id="tabBillingBtn" type="button" class="tab-btn active" data-tab="billing">🧾 Billing Page</button>
+      <button id="tabAdminBtn" type="button" class="tab-btn" data-tab="admin">⚙️ Admin Page</button>
+    </nav>
+
+    <!-- PAGE 1: BILLING PAGE -->
+    <section id="billingView">
+      <!-- Customer & Bill Info -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">Customer &amp; Invoice Details</h2>
+            <p class="card-sub">Fill customer details, capture item photos, and enter charges</p>
+          </div>
+          <span id="billNoBadge" style="font-size:0.82rem; font-weight:800; color:var(--brand); background:var(--brand-soft); border:1px solid var(--brand-border); padding:5px 11px; border-radius:999px;">Bill #INV-101</span>
+        </div>
+        <div class="form-grid">
+          <div>
+            <label class="field-label" for="custNameInput">Customer Name</label>
+            <input id="custNameInput" type="text" placeholder="e.g., Customer name" />
+          </div>
+          <div>
+            <label class="field-label" for="custPhoneInput">WhatsApp / Phone</label>
+            <input id="custPhoneInput" type="tel" placeholder="e.g., 9876543210" />
+          </div>
+          <div>
+            <label class="field-label" for="billNoInput">Bill Number</label>
+            <input id="billNoInput" type="text" placeholder="INV-101" />
+          </div>
+          <div>
+            <label class="field-label" for="billDateInput">Bill Date</label>
+            <input id="billDateInput" type="date" />
+          </div>
+          <div>
+            <label class="field-label" for="billDeliveryDateInput">Delivery Date</label>
+            <input id="billDeliveryDateInput" type="date" />
+          </div>
+        </div>
+        <div id="customerHistoryBanner" class="hidden" style="margin-top:10px; padding:8px 12px; border-radius:10px; background:var(--brand-soft); border:1px solid var(--brand-border); display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; font-size:0.8rem;">
+          <span id="customerHistoryText" style="font-weight:700; color:var(--brand);"></span>
+          <button id="viewCustomerHistoryBtn" type="button" class="btn btn-outline btn-sm" style="padding:4px 9px; font-size:0.74rem;">View Past Bills</button>
+        </div>
+      </div>
+
+      <!-- Dynamic Billing Grid -->
+      <div class="card">
+        <div class="card-header" style="margin-bottom:8px; padding-bottom:6px;">
+          <div>
+            <h2 class="card-title" style="font-size:0.92rem;">Billing Items</h2>
+            <p class="card-sub" style="font-size:0.75rem;">Capture photo from device camera or gallery, and add as many rows as needed</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="bill-table">
+            <thead id="billingTableHead"></thead>
+            <tbody id="billingTableBody"></tbody>
+          </table>
+        </div>
+        <div class="no-print" style="margin-top:8px; display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+          <button id="addRowBtn" type="button" class="btn btn-primary btn-sm" style="padding:5px 11px; font-size:0.76rem;">+ Add Row</button>
+        </div>
+
+        <!-- Bottom Balanced Summary & Payment Grid -->
+        <div class="grand-total-panel">
+          <!-- Left Card: Subtotal, Discount, Grand Total & Quick Actions -->
+          <div class="total-highlight-box">
+            <div>
+              <div class="total-row">
+                <span style="font-weight:700; color:#475569;">Items Subtotal (<span id="rowCountLabel">0</span> rows)</span>
+                <strong id="subtotalDisplay" style="font-size:1.05rem; color:#1e293b;">₹0</strong>
+              </div>
+              <div class="total-row discount-row">
+                <label for="discountInput" style="font-weight:700; color:var(--brand);">Discount Amount</label>
+                <div class="discount-input-wrap">
+                  <span>− ₹</span>
+                  <input id="discountInput" type="number" inputmode="numeric" min="0" step="1" placeholder="0" />
+                </div>
+              </div>
+              <div class="grand-final-row">
+                <span class="grand-final-label">Grand Total</span>
+                <span id="grandTotalDisplay" class="grand-final-value">₹0</span>
+              </div>
+            </div>
+            <div class="bill-actions-left no-print" style="grid-template-columns:1fr 1fr;">
+              <button id="shareBillWaBtn" type="button" class="btn btn-emerald" style="width:100%;">💬 Send Bill on WhatsApp</button>
+              <button id="sendReadyWaBtn" type="button" class="btn btn-outline" style="width:100%;">🎉 Order Ready</button>
+            </div>
+          </div>
+
+          <!-- Right Card: Advance, Final Payment, Balance, Status & Save Bill -->
+          <div class="payment-highlight-box">
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="total-row" style="padding:2px 0;">
+                <label for="advancePaidInput" style="font-weight:700; color:#475569;">Advance Paid</label>
+                <div class="discount-input-wrap">
+                  <span>₹</span>
+                  <input id="advancePaidInput" type="number" inputmode="numeric" min="0" step="1" placeholder="0" />
+                </div>
+              </div>
+              <div class="total-row" style="padding:2px 0;">
+                <label for="finalPaidInput" style="font-weight:700; color:#475569;">Final Payment</label>
+                <div class="discount-input-wrap">
+                  <span>₹</span>
+                  <input id="finalPaidInput" type="number" inputmode="numeric" min="0" step="1" placeholder="0" />
+                </div>
+              </div>
+              <div class="total-row" style="padding:6px 0 2px; border-top:1px dashed #cbd5e1;">
+                <span style="font-weight:700; color:#475569;">Balance Due</span>
+                <strong id="balanceDueDisplay" style="font-size:1.1rem; color:#dc2626;">₹0</strong>
+              </div>
+              <div class="total-row" style="padding:4px 0 0;">
+                <span style="font-weight:700; color:#475569;">Bill Payment Status</span>
+                <div style="display:flex; gap:6px;">
+                  <button id="statusUnpaidBtn" type="button" class="btn btn-sm" style="border:1px solid #fecaca; background:#fef2f2; color:#dc2626;">Unpaid</button>
+                  <button id="statusPaidBtn" type="button" class="btn btn-sm" style="border:1px solid #a7f3d0; background:#ecfdf5; color:#047857;">Paid</button>
+                </div>
+              </div>
+            </div>
+            <button id="saveBillBottomBtn" type="button" class="btn btn-primary no-print" style="width:100%; margin-top:12px;">💾 Save Bill</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 2: ADMIN PAGE -->
+    <section id="adminView" class="hidden">
+      <!-- Shop Settings -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">Shop Details</h2>
+            <p class="card-sub">Appears on the top of your Billing Page and printed bills</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div>
+            <label class="field-label" for="adminShopName">Shop Name</label>
+            <input id="adminShopName" type="text" />
+          </div>
+          <div>
+            <label class="field-label" for="adminShopSub">Tagline / Services</label>
+            <input id="adminShopSub" type="text" />
+          </div>
+          <div>
+            <label class="field-label" for="adminShopPhone">Shop Phone</label>
+            <input id="adminShopPhone" type="tel" placeholder="Optional" />
+          </div>
+          <div>
+            <label class="field-label" for="adminShopUpi">UPI ID (for Bills)</label>
+            <input id="adminShopUpi" type="text" placeholder="e.g., shop@upi" />
+          </div>
+        </div>
+
+        <div style="margin-top:12px; padding-top:12px; border-top:1px solid #f1f5f9; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px;">
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <img id="adminQrPreview" src="" alt="Payment QR" class="hidden" style="width:64px; height:64px; object-fit:contain; border:1px solid #cbd5e1; border-radius:8px; background:#fff; padding:2px;" />
+            <div>
+              <div style="font-size:0.82rem; font-weight:800; color:#1e293b;">Payment QR / Scanner Image</div>
+              <div style="font-size:0.74rem; color:#64748b;">Upload or change your GPay / PhonePe QR shown on printed &amp; PNG bills</div>
+            </div>
+            <label id="uploadQrBtn" class="capture-label" style="cursor:pointer; display:inline-flex; align-items:center; gap:6px; padding:7px 12px; border:1px solid var(--border); border-radius:9px; background:#fff; color:#1e293b; font-size:0.8rem; font-weight:700;">
+              📷 Upload / Change QR
+              <input id="adminShopQrInput" type="file" accept="image/*" class="hidden" />
+            </label>
+            <button id="removeQrBtn" type="button" class="btn btn-danger-soft btn-sm hidden">Remove QR</button>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <button id="exportBackupBtn" type="button" class="btn btn-outline btn-sm">💾 Backup Data (.json)</button>
+            <label id="importBackupBtn" class="capture-label" style="cursor:pointer; display:inline-flex; align-items:center; gap:6px; padding:7px 12px; border:1px solid var(--border); border-radius:9px; background:#fff; color:#1e293b; font-size:0.8rem; font-weight:700;">
+              📥 Restore Backup
+              <input id="importBackupInput" type="file" accept=".json,application/json" class="hidden" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column Manager -->
+      <div class="card">
+        <div id="toggleBillingColsHeader" class="card-header collapsible-header" style="margin-bottom:0; border-bottom:0; padding:6px 8px;">
+          <div>
+            <h2 class="card-title">Manage Billing Columns</h2>
+            <p class="card-sub">Add new charge columns (e.g., Lining, Maggam Work, Rolling) or rename/remove existing columns</p>
+          </div>
+          <span id="billingColsToggleBadge" class="collapse-chevron">▼ Open</span>
+        </div>
+
+        <div id="billingColsBody" class="hidden" style="margin-top:12px; padding-top:12px; border-top:1px solid #f1f5f9;">
+          <form id="addColumnForm" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+            <input id="newColumnName" type="text" placeholder="New Column Name (e.g., Maggam Work)" style="flex:1 1 220px;" required />
+            <button type="submit" class="btn btn-primary">+ Add Column</button>
+          </form>
+
+          <div id="adminColumnsList" class="col-list"></div>
+        </div>
+      </div>
+
+      <!-- Size Chart Dropdown Options Manager -->
+      <div class="card">
+        <div id="toggleSizeOptionsHeader" class="card-header collapsible-header" style="margin-bottom:0; border-bottom:0; padding:6px 8px;">
+          <div>
+            <h2 class="card-title">Manage Size Chart Options</h2>
+            <p class="card-sub">Configure dropdown measurement options shown in the Billing Page Size Chart popup (e.g., Blouse Length, Chest, Waist, Sleeve)</p>
+          </div>
+          <span id="sizeOptionsToggleBadge" class="collapse-chevron">▼ Open</span>
+        </div>
+
+        <div id="sizeOptionsBody" class="hidden" style="margin-top:12px; padding-top:12px; border-top:1px solid #f1f5f9;">
+          <form id="addSizeOptionForm" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+            <input id="newSizeOptionName" type="text" placeholder="New Measurement Option (e.g., Front Neck Depth)" style="flex:1 1 220px;" required />
+            <button type="submit" class="btn btn-primary">+ Add Option</button>
+          </form>
+
+          <div id="adminSizeOptionsList" class="col-list"></div>
+        </div>
+      </div>
+
+      <!-- Theme Color Settings -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">Application Theme Colour</h2>
+            <p class="card-sub">Choose a preset colour or pick any custom colour to update the entire app</p>
+          </div>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:12px;">
+          <div id="themeSwatches" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+          <label style="display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border:1px solid #cbd5e1; border-radius:10px; background:#f8fafc; cursor:pointer; font-size:0.84rem; font-weight:700;">
+            <span>Custom:</span>
+            <input id="customThemePicker" type="color" value="#7c2d12" style="width:32px; height:28px; border:0; background:transparent; padding:0; cursor:pointer;" />
+          </label>
+        </div>
+      </div>
+
+      <!-- Saved Bills History -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">Saved Bills History</h2>
+            <p class="card-sub">Search by bill number or customer, filter by Paid/Unpaid status, and update payments</p>
+          </div>
+          <button id="exportBillsExcelBtn" type="button" class="btn btn-emerald btn-sm no-print">📊 Export Excel</button>
+        </div>
+
+        <div style="display:grid; grid-template-columns:minmax(130px, 1.8fr) minmax(100px, 0.9fr) minmax(120px, 1fr) auto; gap:8px; margin-bottom:12px; align-items:center;">
+          <input id="savedBillSearchInput" type="text" placeholder="🔍 Search Bill No. or Customer..." style="height:36px;" />
+          <select id="savedBillStatusFilter" style="height:36px; padding:6px 8px; font-size:0.84rem;">
+            <option value="all">All Status</option>
+            <option value="paid">Paid Only</option>
+            <option value="unpaid">Unpaid Only</option>
+          </select>
+          <input id="savedBillDateFilter" type="date" style="height:36px;" title="Filter by bill date" />
+          <button id="clearSavedFiltersBtn" type="button" class="btn btn-outline btn-sm" style="height:36px; white-space:nowrap;">Clear</button>
+        </div>
+
+        <div id="savedBillsSummary" style="display:flex; flex-wrap:wrap; gap:10px; padding:10px 12px; background:var(--brand-soft); border:1px solid var(--brand-border); border-radius:10px; margin-bottom:12px; font-size:0.82rem; font-weight:700; color:var(--brand);"></div>
+        <div id="savedBillsList" class="table-wrap"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Size Chart / Measurements Popup Modal -->
+  <div id="sizeChartModal" class="modal-backdrop hidden no-print">
+    <div class="modal-card" style="max-width:560px; max-height:90vh; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid #f1f5f9;">
+        <div>
+          <strong id="sizeChartModalTitle" style="font-size:1.05rem; color:var(--brand);">📏 Item Size Chart</strong>
+          <div id="sizeChartModalSub" style="font-size:0.76rem; color:#64748b;">Select measurement type from dropdown and enter size</div>
+        </div>
+        <button id="closeSizeChartModalBtn" type="button" class="btn btn-outline btn-sm">Close</button>
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <label class="field-label" for="sizeChartItemLabelInput">Garment / Item Label (Optional)</label>
+        <input id="sizeChartItemLabelInput" type="text" placeholder="e.g., Bridal Maggam Blouse / Lehenga" />
+      </div>
+
+      <div id="sizeChartRowsList" style="margin-bottom:10px;"></div>
+
+      <div style="margin-bottom:12px;">
+        <button id="addSizeChartRowBtn" type="button" class="btn btn-outline btn-sm" style="border-color:var(--brand-border); color:var(--brand); background:var(--brand-soft);">+ Add Row</button>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label class="field-label" for="sizeChartNotesInput">Stitching / Fitting Notes (Optional)</label>
+        <textarea id="sizeChartNotesInput" rows="2" placeholder="e.g., Princess cut, back open, 10 inch back neck depth, padded..."></textarea>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button id="doneSizeChartBtn" type="button" class="btn btn-primary">✓ Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print / Download Bill Modal (works even when iframe blocks window.print) -->
+  <div id="printModal" class="modal-backdrop hidden no-print">
+    <div class="modal-card" style="max-width:860px; max-height:90vh; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <strong>Print / Download Bill</strong>
+        <button id="closePrintModalBtn" type="button" class="btn btn-outline btn-sm">Close</button>
+      </div>
+      <div id="printPreviewBody" style="border:1px solid #cbd5e1; border-radius:12px; padding:14px; background:#fff; margin-bottom:14px; font-size:0.85rem;"></div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button id="tryBrowserPrintBtn" type="button" class="btn btn-dark">🖨️ Browser Print / PDF</button>
+        <button id="downloadPngBillBtn" type="button" class="btn btn-primary">🖼️ Download Bill Image (PNG)</button>
+        <button id="downloadHtmlBillBtn" type="button" class="btn btn-outline">📄 Download Printable HTML</button>
+      </div>
+      <p style="font-size:0.75rem; color:#64748b; margin:10px 0 0;">Note: Preview windows sometimes block browser printing—use <strong>🖼️ Download Bill Image (PNG)</strong> or <strong>📄 Download Printable HTML</strong> anytime.</p>
+    </div>
+  </div>
+
+  <!-- Image Zoom Modal -->
+  <div id="imgPreviewModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <strong id="imgPreviewTitle">Item Photo</strong>
+        <button id="closeImgModalBtn" type="button" class="btn btn-outline btn-sm">Close</button>
+      </div>
+      <img id="imgPreviewFull" class="preview-full" src="" alt="Item preview" />
+    </div>
+  </div>
+
+  <!-- WhatsApp Fallback Modal -->
+  <div id="waModal" class="modal-backdrop hidden no-print">
+    <div class="modal-card" style="max-width:540px; max-height:90vh; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <strong>Send Bill PNG on WhatsApp</strong>
+        <button id="closeWaModalBtn" type="button" class="btn btn-outline btn-sm">Close</button>
+      </div>
+      <img id="waBillPngPreview" src="" alt="Bill PNG Preview" style="width:100%; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:6px; background:#fff;" />
+      <p style="margin:0 0 10px; font-size:0.74rem; color:#64748b;">Tip: On Android, tap <strong>Download PNG</strong> below (or long-press the image above → <em>Download / Share image</em>), then attach in WhatsApp.</p>
+      <textarea id="waModalText" readonly rows="5" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.82rem; margin-bottom:10px;"></textarea>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button id="waShareNativeBtn" type="button" class="btn btn-emerald" style="flex:1 1 180px;">📤 Share PNG to WhatsApp</button>
+        <a id="waDownloadPngAgainBtn" href="#" download="bill.png" class="btn btn-primary">🖼️ Download PNG</a>
+        <button id="waPrintPdfBtn" type="button" class="btn btn-outline">🖨️ Save as PDF</button>
+        <button id="waCopyPngBtn" type="button" class="btn btn-outline">📋 Copy PNG</button>
+        <a id="waModalLink" href="https://wa.me/" target="_blank" rel="noopener noreferrer" class="btn btn-outline">💬 Open WhatsApp Chat</a>
+        <button id="copyWaModalBtn" type="button" class="btn btn-dark">📋 Copy Text</button>
+      </div>
+      <p style="font-size:0.75rem; color:#64748b; margin:8px 0 0;">On mobile, tap <strong>💬 Send Bill on WhatsApp</strong> to share the PNG directly via your phone's share sheet, or download the PNG above and attach it in WhatsApp.</p>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script>
+    const STORAGE_KEY = 'embroidery_stitching_billing_v1';
+
+    const DEFAULT_COLUMNS = [
+      { id: 'cloth', name: 'Cloth Amount' },
+      { id: 'pico', name: 'Pico & Falls' },
+      { id: 'design', name: 'Design' },
+      { id: 'tassels', name: 'Tassels' },
+      { id: 'stitching', name: 'Stitching' },
+    ];
+
+    const DEFAULT_SIZE_OPTIONS = [
+      { id: 'sz_length', name: 'Blouse Length' },
+      { id: 'sz_chest', name: 'Chest / Bust' },
+      { id: 'sz_waist', name: 'Waist' },
+      { id: 'sz_shoulder', name: 'Shoulder' },
+      { id: 'sz_sleeve_len', name: 'Sleeve Length' },
+      { id: 'sz_sleeve_round', name: 'Sleeve Loose / Round' },
+      { id: 'sz_armhole', name: 'Armhole' },
+      { id: 'sz_front_neck', name: 'Front Neck Depth' },
+      { id: 'sz_back_neck', name: 'Back Neck Depth' },
+      { id: 'sz_apex', name: 'Apex / Dot Point' },
+    ];
+
+    function todayISO() {
+      const d = new Date();
+      return d.toISOString().slice(0, 10);
+    }
+
+    function createEmptySizeRow(defaultOptionId) {
+      return {
+        id: 'sr_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        optionId: defaultOptionId || '',
+        value: '',
+      };
+    }
+
+    function createDefaultSizeChart() {
+      return {
+        itemLabel: '',
+        notes: '',
+        rows: [
+          createEmptySizeRow('sz_length'),
+          createEmptySizeRow('sz_chest'),
+          createEmptySizeRow('sz_waist'),
+          createEmptySizeRow('sz_sleeve_len'),
+        ],
+      };
+    }
+
+    function createEmptyRow() {
+      return {
+        id: 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        image: '',
+        itemName: '',
+        amounts: {},
+        sizeChart: createDefaultSizeChart(),
+      };
+    }
+
+    function createDefaultState() {
+      return {
+        activeTab: 'billing',
+        themeColor: '#7c2d12',
+        shop: {
+          name: 'Tailor Billing App',
+          tagline: 'Custom Embroidery, Maggam, Pico & Falls, Tassels & Tailoring',
+          phone: '',
+          upiId: '',
+          qrImage: '',
+        },
+        presets: [
+          { id: 'pr_1', name: 'Pico & Falls', colId: 'pico_falls', amount: 60 },
+          { id: 'pr_2', name: 'Plain Blouse Stitching', colId: 'stitching', amount: 400 },
+          { id: 'pr_3', name: 'Lining Blouse Stitching', colId: 'stitching', amount: 550 },
+          { id: 'pr_4', name: 'Tassels / Kuchu', colId: 'tassels', amount: 250 },
+        ],
+        columns: JSON.parse(JSON.stringify(DEFAULT_COLUMNS)),
+        sizeOptions: JSON.parse(JSON.stringify(DEFAULT_SIZE_OPTIONS)),
+        nextBillSeq: 101,
+        currentBill: {
+          billNo: 'INV-101',
+          date: todayISO(),
+          deliveryDate: '',
+          workStatus: 'received',
+          customerName: '',
+          customerPhone: '',
+          discount: 0,
+          advancePaid: 0,
+          finalPaid: 0,
+          paymentStatus: 'unpaid',
+          rows: [createEmptyRow(), createEmptyRow()],
+        },
+        savedBills: [],
+      };
+    }
+
+    function ensureRowSizeChart(row, sizeOptions) {
+      if (!row.sizeChart || typeof row.sizeChart !== 'object') {
+        row.sizeChart = createDefaultSizeChart();
+      }
+      if (!Array.isArray(row.sizeChart.rows)) {
+        row.sizeChart.rows = [createEmptySizeRow(sizeOptions[0] ? sizeOptions[0].id : '')];
+      }
+    }
+
+    function ensureBillRowSizeCharts(bill, sizeOptions) {
+      if (!bill || !Array.isArray(bill.rows)) return;
+      bill.rows.forEach((r) => ensureRowSizeChart(r, sizeOptions));
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return createDefaultState();
+        const parsed = JSON.parse(raw);
+        if (!parsed.columns || !parsed.columns.length) {
+          parsed.columns = JSON.parse(JSON.stringify(DEFAULT_COLUMNS));
+        }
+        if (!Array.isArray(parsed.sizeOptions) || !parsed.sizeOptions.length) {
+          parsed.sizeOptions = JSON.parse(JSON.stringify(DEFAULT_SIZE_OPTIONS));
+        }
+        if (!parsed.currentBill) parsed.currentBill = createDefaultState().currentBill;
+        if (!Array.isArray(parsed.currentBill.rows) || !parsed.currentBill.rows.length) {
+          parsed.currentBill.rows = [createEmptyRow()];
+        }
+        ensureBillRowSizeCharts(parsed.currentBill, parsed.sizeOptions);
+        if (!Array.isArray(parsed.savedBills)) parsed.savedBills = [];
+        if (!Array.isArray(parsed.presets)) parsed.presets = createDefaultState().presets;
+        if (!parsed.shop) parsed.shop = createDefaultState().shop;
+        return parsed;
+      } catch (e) {
+        return createDefaultState();
+      }
+    }
+
+    let state = loadState();
+    let activeSizeChartRowId = null;
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        showToast('Storage full — try smaller photos or clear old saved bills');
+      }
+    }
+
+    function formatINR(n) {
+      const num = Number(n) || 0;
+      return '₹' + num.toLocaleString('en-IN');
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.remove('hidden');
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => t.classList.add('hidden'), 2600);
+    }
+
+    // Compress captured/uploaded image so localStorage stays fast & light
+    function compressImageFile(file, callback) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 360;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w >= h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          callback(canvas.toDataURL('image/jpeg', 0.65));
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function getRowTotal(row) {
+      const unitSum = state.columns.reduce((sum, col) => sum + (Number(row.amounts[col.id]) || 0), 0);
+      const qty = Math.max(1, Number(row.qty) || 1);
+      return unitSum * qty;
+    }
+
+    function getSubtotal() {
+      return state.currentBill.rows.reduce((sum, r) => sum + getRowTotal(r), 0);
+    }
+
+    function getGrandTotal() {
+      const sub = getSubtotal();
+      const disc = Math.max(0, Number(state.currentBill.discount) || 0);
+      return Math.max(0, sub - disc);
+    }
+
+    function getBalanceDue(bill) {
+      const target = bill || state.currentBill;
+      const grand = bill ? Number(bill.grandTotal || 0) : getGrandTotal();
+      const adv = Math.max(0, Number(target.advancePaid) || 0);
+      const fin = Math.max(0, Number(target.finalPaid) || 0);
+      return Math.max(0, grand - adv - fin);
+    }
+
+    const THEME_PRESETS = [
+      { name: 'Maroon', hex: '#7c2d12' },
+      { name: 'Royal Indigo', hex: '#3730a3' },
+      { name: 'Emerald', hex: '#065f46' },
+      { name: 'Rose Pink', hex: '#9d174d' },
+      { name: 'Navy Blue', hex: '#1e3a8a' },
+      { name: 'Teal', hex: '#115e59' },
+      { name: 'Purple', hex: '#6b21a8' },
+    ];
+
+    function hexToRgb(hex) {
+      const clean = String(hex || '#7c2d12').replace('#', '');
+      const full = clean.length === 3 ? clean.split('').map((c) => c + c).join('') : clean;
+      const num = parseInt(full, 16) || 0;
+      return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+    }
+
+    function mixWithWhite(rgb, amount) {
+      const r = Math.round(rgb.r + (255 - rgb.r) * amount);
+      const g = Math.round(rgb.g + (255 - rgb.g) * amount);
+      const b = Math.round(rgb.b + (255 - rgb.b) * amount);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function darkenRgb(rgb, factor) {
+      const r = Math.max(0, Math.round(rgb.r * factor));
+      const g = Math.max(0, Math.round(rgb.g * factor));
+      const b = Math.max(0, Math.round(rgb.b * factor));
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function applyThemeColor(hex) {
+      const color = hex || '#7c2d12';
+      const rgb = hexToRgb(color);
+      const root = document.documentElement.style;
+      root.setProperty('--brand', color);
+      root.setProperty('--brand-dark', darkenRgb(rgb, 0.72));
+      root.setProperty('--brand-soft', mixWithWhite(rgb, 0.93));
+      root.setProperty('--brand-tint', mixWithWhite(rgb, 0.85));
+      root.setProperty('--brand-border', mixWithWhite(rgb, 0.62));
+      root.setProperty('--brand-accent', mixWithWhite(rgb, 0.25));
+      root.setProperty('--brand-subtext', mixWithWhite(rgb, 0.75));
+      root.setProperty('--bg', mixWithWhite(rgb, 0.96));
+    }
+
+    function switchTab(tabName) {
+      state.activeTab = tabName;
+      saveState();
+      renderAll();
+    }
+
+    function renderHeaderAndTabs() {
+      applyThemeColor(state.themeColor || '#7c2d12');
+      document.getElementById('headerShopName').textContent = state.shop.name || 'Tailor Billing App';
+      document.getElementById('headerShopSub').textContent = [state.shop.tagline, state.shop.phone ? '📞 ' + state.shop.phone : ''].filter(Boolean).join('  •  ');
+
+      const isBilling = state.activeTab === 'billing';
+      document.getElementById('billingView').classList.toggle('hidden', !isBilling);
+      document.getElementById('adminView').classList.toggle('hidden', isBilling);
+      document.getElementById('tabBillingBtn').classList.toggle('active', isBilling);
+      document.getElementById('tabAdminBtn').classList.toggle('active', !isBilling);
+    }
+
+    function updateCustomerHistoryBanner() {
+      const banner = document.getElementById('customerHistoryBanner');
+      const textEl = document.getElementById('customerHistoryText');
+      const b = state.currentBill;
+      const phone = String(b.customerPhone || '').replace(/\D/g, '');
+      const name = String(b.customerName || '').trim().toLowerCase();
+      if (!phone && name.length < 2) {
+        banner.classList.add('hidden');
+        return;
+      }
+      const matches = state.savedBills.filter((sb) => {
+        if (b.id && sb.id === b.id) return false;
+        const sbPhone = String(sb.customerPhone || '').replace(/\D/g, '');
+        const sbName = String(sb.customerName || '').trim().toLowerCase();
+        if (phone.length >= 6 && sbPhone && sbPhone.includes(phone)) return true;
+        if (name.length >= 2 && sbName && sbName === name) return true;
+        return false;
+      });
+      if (!matches.length) {
+        banner.classList.add('hidden');
+        return;
+      }
+      const unpaidBal = matches.reduce((sum, sb) => sum + (sb.paymentStatus === 'paid' ? 0 : getBalanceDue(sb)), 0);
+      textEl.textContent = `Returning Customer: ${matches.length} past bill(s)${unpaidBal > 0 ? ' • Previous Unpaid Balance: ' + formatINR(unpaidBal) : ' • All past bills paid'}`;
+      banner.classList.remove('hidden');
+    }
+
+    function getRowSizeCount(row) {
+      ensureRowSizeChart(row, state.sizeOptions);
+      return row.sizeChart.rows.filter(
+        (r) => r.optionId && String(r.value || '').trim() !== ''
+      ).length;
+    }
+
+    function updateRowSizeBadge(rowId) {
+      const row = state.currentBill.rows.find((r) => r.id === rowId);
+      if (!row) return;
+      const badge = document.querySelector(`[data-row-size-badge="${rowId}"]`);
+      if (!badge) return;
+      const count = getRowSizeCount(row);
+      badge.textContent = String(count);
+      badge.classList.toggle('hidden', count === 0);
+    }
+
+    function renderBillMeta() {
+      const b = state.currentBill;
+      ensureBillRowSizeCharts(b, state.sizeOptions);
+      document.getElementById('custNameInput').value = b.customerName || '';
+      document.getElementById('custPhoneInput').value = b.customerPhone || '';
+      document.getElementById('billNoInput').value = b.billNo || '';
+      document.getElementById('billDateInput').value = b.date || todayISO();
+      document.getElementById('billDeliveryDateInput').value = b.deliveryDate || '';
+      updateCustomerHistoryBanner();
+      document.getElementById('billNoBadge').textContent = `Bill #${b.billNo || 'INV'}`;
+      document.getElementById('discountInput').value = b.discount ? b.discount : '';
+      document.getElementById('advancePaidInput').value = b.advancePaid ? b.advancePaid : '';
+      document.getElementById('finalPaidInput').value = b.finalPaid ? b.finalPaid : '';
+      const isExisting = Boolean(b.id && state.savedBills.some((sb) => sb.id === b.id));
+      const label = isExisting ? '💾 Update Bill' : '💾 Save Bill';
+      document.getElementById('saveBillBtn').textContent = label;
+      document.getElementById('saveBillBottomBtn').textContent = label;
+    }
+
+    function renderTotals() {
+      const sub = getSubtotal();
+      const grand = getGrandTotal();
+      const bal = getBalanceDue();
+      const isPaid = state.currentBill.paymentStatus === 'paid';
+      document.getElementById('rowCountLabel').textContent = String(state.currentBill.rows.length);
+      document.getElementById('subtotalDisplay').textContent = formatINR(sub);
+      document.getElementById('grandTotalDisplay').textContent = formatINR(grand);
+      const balEl = document.getElementById('balanceDueDisplay');
+      balEl.textContent = formatINR(isPaid ? 0 : bal);
+      balEl.style.color = isPaid || bal === 0 ? '#047857' : '#dc2626';
+
+      const unpaidBtn = document.getElementById('statusUnpaidBtn');
+      const paidBtn = document.getElementById('statusPaidBtn');
+      unpaidBtn.style.background = !isPaid ? '#dc2626' : '#fef2f2';
+      unpaidBtn.style.color = !isPaid ? '#ffffff' : '#dc2626';
+      paidBtn.style.background = isPaid ? '#047857' : '#ecfdf5';
+      paidBtn.style.color = isPaid ? '#ffffff' : '#047857';
+    }
+
+    function renderBillingGrid() {
+      const thead = document.getElementById('billingTableHead');
+      const tbody = document.getElementById('billingTableBody');
+
+      const colHeaders = state.columns
+        .map((c) => `<th class="num-col">${escapeHtml(c.name)} (₹)</th>`)
+        .join('');
+
+      thead.innerHTML = `
+        <tr>
+          <th style="width:28px;">#</th>
+          <th style="min-width:165px;">Item &amp; Photo</th>
+          <th style="width:46px; text-align:center;" title="Size Chart">Size</th>
+          <th style="width:52px; text-align:center;">Qty</th>
+          ${colHeaders}
+          <th class="num-col">Row Total</th>
+          <th class="no-print" style="width:46px; text-align:center;">Del</th>
+        </tr>
+      `;
+
+      tbody.innerHTML = state.currentBill.rows
+        .map((row, idx) => {
+          ensureRowSizeChart(row, state.sizeOptions);
+          const filledSizeCount = row.sizeChart.rows.filter(
+            (sr) => sr.optionId && String(sr.value || '').trim() !== ''
+          ).length;
+
+          const amountCells = state.columns
+            .map((col) => {
+              const val = row.amounts[col.id];
+              return `
+                <td class="num-col" data-label="${escapeHtml(col.name)} (₹)">
+                  <input type="number" inputmode="numeric" min="0" step="1" class="num-input row-amt-input"
+                    data-row-id="${row.id}" data-col-id="${col.id}"
+                    value="${val !== undefined && val !== '' ? val : ''}" placeholder="0" />
+                </td>
+              `;
+            })
+            .join('');
+
+          const imgHtml = row.image
+            ? `
+              <div class="img-capture-box">
+                <div class="thumb-wrap" data-preview-row="${row.id}" title="Tap to view photo">
+                  <img src="${row.image}" alt="Item" />
+                </div>
+                <button type="button" class="img-remove-btn no-print" data-clear-img="${row.id}" title="Remove photo">&times;</button>
+              </div>
+            `
+            : `
+              <label class="capture-label no-print">
+                📷 Capture
+                <input type="file" accept="image/*" capture="environment" class="hidden row-img-input" data-row-id="${row.id}" />
+              </label>
+            `;
+
+          return `
+            <tr>
+              <td class="col-idx" style="font-weight:700; color:#64748b;">${idx + 1}</td>
+              <td class="col-item" data-label="Item &amp; Photo">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:nowrap;">
+                  <div style="flex:0 0 auto;">${imgHtml}</div>
+                  <input type="text" class="item-input row-name-input" data-row-id="${row.id}"
+                    value="${escapeHtml(row.itemName)}" placeholder="e.g., Red Saree / Blouse" style="flex:1 1 105px; min-width:95px;" />
+                </div>
+              </td>
+              <td class="col-size no-print" data-label="Size" style="text-align:center;">
+                <button type="button" class="btn btn-icon-size open-row-size-btn" data-row-id="${row.id}" title="Open Size Chart">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>
+                  <span class="size-badge-mini ${filledSizeCount === 0 ? 'hidden' : ''}" data-row-size-badge="${row.id}">${filledSizeCount}</span>
+                </button>
+              </td>
+              <td class="col-qty" data-label="Qty">
+                <select class="row-qty-select" data-row-id="${row.id}" style="width:52px; min-width:50px; text-align:center; padding:6px 3px; font-size:0.83rem;">
+                  ${Array.from({ length: 100 }, (_, n) => {
+                    const q = n + 1;
+                    const sel = (Number(row.qty) || 1) === q ? 'selected' : '';
+                    return `<option value="${q}" ${sel}>${q}</option>`;
+                  }).join('')}
+                </select>
+              </td>
+              ${amountCells}
+              <td class="row-total-cell" data-label="Row Total" data-row-total="${row.id}">${formatINR(getRowTotal(row))}</td>
+              <td class="col-action no-print" style="text-align:center;">
+                <button type="button" class="btn btn-danger-soft remove-row-btn" data-row-id="${row.id}">🗑️ Remove</button>
+              </td>
+            </tr>
+          `;
+        })
+        .join('');
+
+      renderTotals();
+    }
+
+    function getActiveSizeChartRow() {
+      if (!activeSizeChartRowId) return null;
+      return state.currentBill.rows.find((r) => r.id === activeSizeChartRowId) || null;
+    }
+
+    function renderSizeChartModal() {
+      const targetRow = getActiveSizeChartRow();
+      if (!targetRow) return;
+      const rowIdx = state.currentBill.rows.findIndex((r) => r.id === targetRow.id);
+      ensureRowSizeChart(targetRow, state.sizeOptions);
+      const sc = targetRow.sizeChart;
+
+      if (!sc.itemLabel && targetRow.itemName) {
+        sc.itemLabel = targetRow.itemName;
+      }
+
+      const displayItemName = targetRow.itemName || sc.itemLabel || `Item #${rowIdx + 1}`;
+      document.getElementById('sizeChartModalTitle').textContent = `📏 Size Chart — ${displayItemName}`;
+      document.getElementById('sizeChartModalSub').textContent = `Row #${rowIdx + 1} • Select measurement type from dropdown and enter size`;
+
+      document.getElementById('sizeChartItemLabelInput').value = sc.itemLabel || '';
+      document.getElementById('sizeChartNotesInput').value = sc.notes || '';
+
+      const listEl = document.getElementById('sizeChartRowsList');
+      if (!sc.rows.length) {
+        sc.rows.push(createEmptySizeRow(state.sizeOptions[0] ? state.sizeOptions[0].id : ''));
+      }
+
+      listEl.innerHTML = sc.rows
+        .map((row) => {
+          const optionsHtml = [
+            `<option value="">-- Select Measurement --</option>`,
+            ...state.sizeOptions.map((opt) => {
+              const sel = row.optionId === opt.id ? 'selected' : '';
+              return `<option value="${escapeHtml(opt.id)}" ${sel}>${escapeHtml(opt.name)}</option>`;
+            }),
+          ].join('');
+
+          return `
+            <div class="size-row">
+              <div>
+                <select class="size-row-option-select" data-size-row-id="${row.id}">
+                  ${optionsHtml}
+                </select>
+              </div>
+              <div>
+                <input type="text" class="size-row-value-input" data-size-row-id="${row.id}"
+                  value="${escapeHtml(row.value)}" placeholder="e.g., 14.5 in / 36" />
+              </div>
+              <div style="text-align:right;">
+                <button type="button" class="btn btn-danger-soft remove-size-row-btn" data-size-row-id="${row.id}" title="Remove row">🗑️</button>
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+
+      updateRowSizeBadge(targetRow.id);
+    }
+
+    function getFilteredSavedBills() {
+      const searchQ = (document.getElementById('savedBillSearchInput').value || '').trim().toLowerCase();
+      const statusF = document.getElementById('savedBillStatusFilter').value || 'all';
+      const dateF = document.getElementById('savedBillDateFilter').value || '';
+      return state.savedBills
+        .slice()
+        .reverse()
+        .filter((b) => {
+          const st = b.paymentStatus || 'unpaid';
+          if (statusF !== 'all' && st !== statusF) return false;
+          if (dateF && b.date !== dateF) return false;
+          if (searchQ) {
+            const hay = `${b.billNo || ''} ${b.customerName || ''} ${b.customerPhone || ''}`.toLowerCase();
+            if (!hay.includes(searchQ)) return false;
+          }
+          return true;
+        });
+    }
+
+    function getSavedFilterDescription() {
+      const searchQ = (document.getElementById('savedBillSearchInput').value || '').trim();
+      const statusF = document.getElementById('savedBillStatusFilter').value || 'all';
+      const dateF = document.getElementById('savedBillDateFilter').value || '';
+      const parts = [];
+      parts.push(`Status: ${statusF === 'all' ? 'All' : statusF === 'paid' ? 'Paid Only' : 'Unpaid Only'}`);
+      if (dateF) parts.push(`Date: ${dateF}`);
+      if (searchQ) parts.push(`Search: "${searchQ}"`);
+      return parts.join(' • ');
+    }
+
+    function renderAdminPage() {
+      document.getElementById('adminShopName').value = state.shop.name || '';
+      document.getElementById('adminShopSub').value = state.shop.tagline || '';
+      document.getElementById('adminShopPhone').value = state.shop.phone || '';
+      document.getElementById('adminShopUpi').value = state.shop.upiId || '';
+      const qrPrev = document.getElementById('adminQrPreview');
+      const remQrBtn = document.getElementById('removeQrBtn');
+      if (state.shop.qrImage) {
+        qrPrev.src = state.shop.qrImage;
+        qrPrev.classList.remove('hidden');
+        remQrBtn.classList.remove('hidden');
+      } else {
+        qrPrev.src = '';
+        qrPrev.classList.add('hidden');
+        remQrBtn.classList.add('hidden');
+      }
+      const currentTheme = (state.themeColor || '#7c2d12').toLowerCase();
+      document.getElementById('customThemePicker').value = currentTheme;
+      document.getElementById('themeSwatches').innerHTML = THEME_PRESETS.map((t) => {
+        const active = t.hex.toLowerCase() === currentTheme;
+        return `<button type="button" class="theme-swatch-btn" data-theme-hex="${t.hex}" style="display:inline-flex; align-items:center; gap:6px; padding:7px 12px; border-radius:10px; border:${active ? '2px solid #0f172a' : '1px solid #cbd5e1'}; background:#fff; font-size:0.82rem; font-weight:700; cursor:pointer;">
+          <span style="width:16px; height:16px; border-radius:999px; background:${t.hex}; display:inline-block;"></span>
+          <span>${t.name}</span>
+        </button>`;
+      }).join('');
+
+      const colList = document.getElementById('adminColumnsList');
+      colList.innerHTML = state.columns
+        .map(
+          (col, idx) => `
+          <div class="col-item">
+            <div class="col-item-left">
+              <span style="font-weight:800; color:#64748b; width:24px;">${idx + 1}.</span>
+              <input type="text" class="admin-col-rename" data-col-id="${col.id}" value="${escapeHtml(col.name)}" />
+            </div>
+            <div class="col-item-actions">
+              <button type="button" class="btn btn-outline btn-sm move-col-btn" data-col-id="${col.id}" data-dir="-1" ${idx === 0 ? 'disabled' : ''}>↑</button>
+              <button type="button" class="btn btn-outline btn-sm move-col-btn" data-col-id="${col.id}" data-dir="1" ${idx === state.columns.length - 1 ? 'disabled' : ''}>↓</button>
+              <button type="button" class="btn btn-danger-soft delete-col-btn" data-col-id="${col.id}">Remove</button>
+            </div>
+          </div>
+        `
+        )
+        .join('');
+
+      const sizeOptsList = document.getElementById('adminSizeOptionsList');
+      sizeOptsList.innerHTML = state.sizeOptions
+        .map(
+          (opt, idx) => `
+          <div class="col-item">
+            <div class="col-item-left">
+              <span style="font-weight:800; color:#64748b; width:24px;">${idx + 1}.</span>
+              <input type="text" class="admin-size-opt-rename" data-opt-id="${opt.id}" value="${escapeHtml(opt.name)}" />
+            </div>
+            <div class="col-item-actions">
+              <button type="button" class="btn btn-outline btn-sm move-size-opt-btn" data-opt-id="${opt.id}" data-dir="-1" ${idx === 0 ? 'disabled' : ''}>↑</button>
+              <button type="button" class="btn btn-outline btn-sm move-size-opt-btn" data-opt-id="${opt.id}" data-dir="1" ${idx === state.sizeOptions.length - 1 ? 'disabled' : ''}>↓</button>
+              <button type="button" class="btn btn-danger-soft delete-size-opt-btn" data-opt-id="${opt.id}">Remove</button>
+            </div>
+          </div>
+        `
+        )
+        .join('');
+
+      const filteredBills = getFilteredSavedBills();
+
+      const totalAmt = filteredBills.reduce((sum, b) => sum + (Number(b.grandTotal) || 0), 0);
+      const totalCollected = filteredBills.reduce((sum, b) => sum + (Number(b.advancePaid) || 0) + (Number(b.finalPaid) || 0), 0);
+      const totalPending = filteredBills.reduce((sum, b) => sum + (b.paymentStatus === 'paid' ? 0 : getBalanceDue(b)), 0);
+      document.getElementById('savedBillsSummary').innerHTML = `
+        <span>Bills: ${filteredBills.length}</span>
+        <span>•</span>
+        <span>Total Billed: ${formatINR(totalAmt)}</span>
+        <span>•</span>
+        <span style="color:#047857;">Collected: ${formatINR(totalCollected)}</span>
+        <span>•</span>
+        <span style="color:#dc2626;">Pending: ${formatINR(totalPending)}</span>
+      `;
+
+      const savedList = document.getElementById('savedBillsList');
+      if (!filteredBills.length) {
+        savedList.innerHTML = '<div style="padding:18px; text-align:center; color:#64748b; font-size:0.86rem;">No saved bills match the current filters.</div>';
+      } else {
+        const rowsHtml = filteredBills
+          .map((b) => {
+            const isPaid = b.paymentStatus === 'paid';
+            const adv = Number(b.advancePaid) || 0;
+            const fin = Number(b.finalPaid) || 0;
+            const bal = isPaid ? 0 : getBalanceDue(b);
+            return `
+              <tr>
+                <td data-label="Bill No" style="font-weight:800; color:var(--brand); white-space:nowrap;">${escapeHtml(b.billNo)}</td>
+                <td data-label="Date" style="white-space:nowrap; color:#475569;">
+                  <div>${escapeHtml(b.date)}</div>
+                  ${b.deliveryDate ? `<div style="font-size:0.7rem; color:#0369a1; font-weight:700;">Due: ${escapeHtml(b.deliveryDate)}</div>` : ''}
+                </td>
+                <td data-label="Customer">
+                  <div style="font-weight:700; color:#0f172a;">${escapeHtml(b.customerName || 'Walk-in')}</div>
+                  ${b.customerPhone ? `<div style="font-size:0.74rem; color:#64748b;">${escapeHtml(b.customerPhone)}</div>` : ''}
+                </td>
+                <td data-label="Total" class="num-col" style="font-weight:700; white-space:nowrap;">${formatINR(b.grandTotal)}</td>
+                <td data-label="Advance" class="num-col" style="white-space:nowrap; color:#475569;">${formatINR(adv)}</td>
+                <td data-label="Final" class="num-col" style="white-space:nowrap; color:#475569;">${formatINR(fin)}</td>
+                <td data-label="Balance" class="num-col" style="font-weight:800; white-space:nowrap; color:${bal === 0 ? '#047857' : '#dc2626'};">${formatINR(bal)}</td>
+                <td data-label="Status" style="text-align:center;">
+                  <button type="button" class="btn btn-sm toggle-saved-status-btn" data-bill-id="${b.id}" title="Click to toggle Paid / Unpaid"
+                    style="padding:3px 9px; font-size:0.72rem; border-radius:999px; font-weight:800; ${isPaid ? 'background:#dcfce7; color:#166534; border:1px solid #86efac;' : 'background:#fee2e2; color:#991b1b; border:1px solid #fca5a5;'}">
+                    ${isPaid ? 'PAID' : 'UNPAID'}
+                  </button>
+                </td>
+                <td data-label="Actions" style="text-align:center; white-space:nowrap;">
+                  <div style="display:inline-flex; gap:4px;">
+                    <button type="button" class="btn btn-outline btn-sm load-saved-bill-btn" data-bill-id="${b.id}" style="padding:4px 8px; font-size:0.74rem;">📂 Load</button>
+                    <button type="button" class="btn btn-danger-soft btn-sm delete-saved-bill-btn" data-bill-id="${b.id}" style="padding:4px 7px; font-size:0.74rem;">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+
+        savedList.innerHTML = `
+          <table class="bill-table">
+            <thead>
+              <tr>
+                <th>Bill No</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th class="num-col">Total</th>
+                <th class="num-col">Advance</th>
+                <th class="num-col">Final</th>
+                <th class="num-col">Balance</th>
+                <th style="text-align:center;">Status</th>
+                <th style="text-align:center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        `;
+      }
+    }
+
+    function renderAll() {
+      renderHeaderAndTabs();
+      renderBillMeta();
+      renderBillingGrid();
+      renderAdminPage();
+    }
+
+    // Tab switching & Theme listeners
+    document.querySelectorAll('.tab-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        switchTab(btn.dataset.tab);
+      });
+    });
+
+    document.getElementById('themeSwatches').addEventListener('click', (e) => {
+      const btn = e.target.closest('.theme-swatch-btn');
+      if (!btn) return;
+      state.themeColor = btn.dataset.themeHex;
+      saveState();
+      renderAll();
+      showToast('Theme colour updated');
+    });
+
+    document.getElementById('customThemePicker').addEventListener('input', (e) => {
+      state.themeColor = e.target.value;
+      saveState();
+      applyThemeColor(state.themeColor);
+    });
+    document.getElementById('customThemePicker').addEventListener('change', () => {
+      renderAdminPage();
+      showToast('Custom theme colour applied');
+    });
+
+    // Size Chart Modal Logic (Per-Item Row)
+    function openRowSizeChartModal(rowId) {
+      const targetRow = state.currentBill.rows.find((r) => r.id === rowId);
+      if (!targetRow) return;
+      activeSizeChartRowId = rowId;
+      renderSizeChartModal();
+      document.getElementById('sizeChartModal').classList.remove('hidden');
+    }
+
+    function closeSizeChartModal() {
+      const closedRowId = activeSizeChartRowId;
+      document.getElementById('sizeChartModal').classList.add('hidden');
+      if (closedRowId) updateRowSizeBadge(closedRowId);
+      activeSizeChartRowId = null;
+    }
+
+    document.getElementById('closeSizeChartModalBtn').addEventListener('click', closeSizeChartModal);
+    document.getElementById('doneSizeChartBtn').addEventListener('click', () => {
+      saveState();
+      closeSizeChartModal();
+      showToast('Item size chart saved');
+    });
+
+    document.getElementById('addSizeChartRowBtn').addEventListener('click', () => {
+      const targetRow = getActiveSizeChartRow();
+      if (!targetRow) return;
+      ensureRowSizeChart(targetRow, state.sizeOptions);
+      targetRow.sizeChart.rows.push(createEmptySizeRow(''));
+      saveState();
+      renderSizeChartModal();
+    });
+
+    document.getElementById('sizeChartItemLabelInput').addEventListener('input', (e) => {
+      const targetRow = getActiveSizeChartRow();
+      if (!targetRow) return;
+      ensureRowSizeChart(targetRow, state.sizeOptions);
+      targetRow.sizeChart.itemLabel = e.target.value;
+      saveState();
+    });
+
+    document.getElementById('sizeChartNotesInput').addEventListener('input', (e) => {
+      const targetRow = getActiveSizeChartRow();
+      if (!targetRow) return;
+      ensureRowSizeChart(targetRow, state.sizeOptions);
+      targetRow.sizeChart.notes = e.target.value;
+      saveState();
+    });
+
+    const sizeChartRowsEl = document.getElementById('sizeChartRowsList');
+    sizeChartRowsEl.addEventListener('change', (e) => {
+      const sel = e.target.closest('.size-row-option-select');
+      const targetRow = getActiveSizeChartRow();
+      if (!sel || !targetRow) return;
+      const sRow = targetRow.sizeChart.rows.find((r) => r.id === sel.dataset.sizeRowId);
+      if (sRow) {
+        sRow.optionId = sel.value;
+        saveState();
+        updateRowSizeBadge(targetRow.id);
+      }
+    });
+
+    sizeChartRowsEl.addEventListener('input', (e) => {
+      const inp = e.target.closest('.size-row-value-input');
+      const targetRow = getActiveSizeChartRow();
+      if (!inp || !targetRow) return;
+      const sRow = targetRow.sizeChart.rows.find((r) => r.id === inp.dataset.sizeRowId);
+      if (sRow) {
+        sRow.value = inp.value;
+        saveState();
+        updateRowSizeBadge(targetRow.id);
+      }
+    });
+
+    sizeChartRowsEl.addEventListener('click', (e) => {
+      const delBtn = e.target.closest('.remove-size-row-btn');
+      const targetRow = getActiveSizeChartRow();
+      if (!delBtn || !targetRow) return;
+      const sc = targetRow.sizeChart;
+      if (sc.rows.length <= 1) {
+        sc.rows = [createEmptySizeRow('')];
+      } else {
+        sc.rows = sc.rows.filter((r) => r.id !== delBtn.dataset.sizeRowId);
+      }
+      saveState();
+      renderSizeChartModal();
+    });
+
+    // Customer & Bill Meta listeners
+    document.getElementById('custNameInput').addEventListener('input', (e) => {
+      state.currentBill.customerName = e.target.value;
+      saveState();
+      updateCustomerHistoryBanner();
+    });
+    document.getElementById('custPhoneInput').addEventListener('input', (e) => {
+      const val = e.target.value;
+      state.currentBill.customerPhone = val;
+      const digits = val.replace(/\D/g, '');
+      if (digits.length >= 6 && !state.currentBill.customerName) {
+        const match = state.savedBills.slice().reverse().find((sb) => String(sb.customerPhone || '').replace(/\D/g, '').includes(digits));
+        if (match && match.customerName) {
+          state.currentBill.customerName = match.customerName;
+          document.getElementById('custNameInput').value = match.customerName;
+        }
+      }
+      saveState();
+      updateCustomerHistoryBanner();
+    });
+    document.getElementById('billDeliveryDateInput').addEventListener('change', (e) => {
+      state.currentBill.deliveryDate = e.target.value;
+      saveState();
+    });
+    document.getElementById('viewCustomerHistoryBtn').addEventListener('click', () => {
+      const q = state.currentBill.customerPhone || state.currentBill.customerName || '';
+      document.getElementById('savedBillSearchInput').value = q;
+      switchTab('admin');
+    });
+    document.getElementById('sendReadyWaBtn').addEventListener('click', () => {
+      const b = state.currentBill;
+      const isPaid = b.paymentStatus === 'paid';
+      const bal = isPaid ? 0 : getBalanceDue();
+      const msg = [
+        `Hello ${b.customerName || 'Customer'},`,
+        `Your order (*Bill #${b.billNo}*) from *${state.shop.name}* is *READY for pickup*!`,
+        bal > 0 ? `Balance Due: *${formatINR(bal)}*` : 'Payment Status: *PAID*',
+        state.shop.upiId ? `UPI ID: ${state.shop.upiId}` : '',
+        'Thank you!',
+      ].filter(Boolean).join('\n');
+      const digits = String(b.customerPhone || '').replace(/\D/g, '');
+      const phone = digits.length === 10 ? '91' + digits : digits;
+      const url = phone
+        ? `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`
+        : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    });
+    document.getElementById('billNoInput').addEventListener('input', (e) => {
+      state.currentBill.billNo = e.target.value;
+      document.getElementById('billNoBadge').textContent = `Bill #${e.target.value || 'INV'}`;
+      saveState();
+    });
+    document.getElementById('billDateInput').addEventListener('change', (e) => {
+      state.currentBill.date = e.target.value;
+      saveState();
+    });
+    document.getElementById('discountInput').addEventListener('input', (e) => {
+      state.currentBill.discount = Math.max(0, Number(e.target.value) || 0);
+      saveState();
+      renderTotals();
+    });
+    document.getElementById('advancePaidInput').addEventListener('input', (e) => {
+      state.currentBill.advancePaid = Math.max(0, Number(e.target.value) || 0);
+      saveState();
+      renderTotals();
+    });
+    document.getElementById('finalPaidInput').addEventListener('input', (e) => {
+      state.currentBill.finalPaid = Math.max(0, Number(e.target.value) || 0);
+      if (getBalanceDue() === 0 && getGrandTotal() > 0) {
+        state.currentBill.paymentStatus = 'paid';
+      }
+      saveState();
+      renderTotals();
+    });
+    document.getElementById('statusUnpaidBtn').addEventListener('click', () => {
+      state.currentBill.paymentStatus = 'unpaid';
+      saveState();
+      renderTotals();
+    });
+    document.getElementById('statusPaidBtn').addEventListener('click', () => {
+      state.currentBill.paymentStatus = 'paid';
+      saveState();
+      renderTotals();
+    });
+
+    // Add Row buttons
+    function addNewRow() {
+      state.currentBill.rows.push(createEmptyRow());
+      saveState();
+      renderBillingGrid();
+    }
+    document.getElementById('addRowBtn').addEventListener('click', addNewRow);
+
+    // Billing Grid input & click delegation
+    const billingBody = document.getElementById('billingTableBody');
+
+    billingBody.addEventListener('change', (e) => {
+      const sel = e.target.closest('.row-qty-select');
+      if (!sel) return;
+      const row = state.currentBill.rows.find((r) => r.id === sel.dataset.rowId);
+      if (!row) return;
+      row.qty = Math.max(1, Math.min(100, Number(sel.value) || 1));
+      const rowTotalCell = document.querySelector(`[data-row-total="${row.id}"]`);
+      if (rowTotalCell) rowTotalCell.textContent = formatINR(getRowTotal(row));
+      saveState();
+      renderTotals();
+    });
+
+    billingBody.addEventListener('input', (e) => {
+      const nameInput = e.target.closest('.row-name-input');
+      if (nameInput) {
+        const row = state.currentBill.rows.find((r) => r.id === nameInput.dataset.rowId);
+        if (row) {
+          row.itemName = nameInput.value;
+          saveState();
+        }
+        return;
+      }
+
+      const amtInput = e.target.closest('.row-amt-input');
+      if (amtInput) {
+        const row = state.currentBill.rows.find((r) => r.id === amtInput.dataset.rowId);
+        if (row) {
+          row.amounts[amtInput.dataset.colId] = amtInput.value === '' ? '' : Math.max(0, Number(amtInput.value) || 0);
+          saveState();
+          const totalCell = billingBody.querySelector(`[data-row-total="${row.id}"]`);
+          if (totalCell) totalCell.textContent = formatINR(getRowTotal(row));
+          renderTotals();
+        }
+      }
+    });
+
+    billingBody.addEventListener('change', (e) => {
+      const fileInput = e.target.closest('.row-img-input');
+      if (!fileInput || !fileInput.files || !fileInput.files[0]) return;
+      const rowId = fileInput.dataset.rowId;
+      compressImageFile(fileInput.files[0], (dataUrl) => {
+        const row = state.currentBill.rows.find((r) => r.id === rowId);
+        if (row) {
+          row.image = dataUrl;
+          saveState();
+          renderBillingGrid();
+        }
+      });
+    });
+
+    billingBody.addEventListener('click', (e) => {
+      const sizeBtn = e.target.closest('.open-row-size-btn');
+      if (sizeBtn) {
+        openRowSizeChartModal(sizeBtn.dataset.rowId);
+        return;
+      }
+
+      const removeBtn = e.target.closest('.remove-row-btn');
+      if (removeBtn) {
+        if (state.currentBill.rows.length <= 1) {
+          state.currentBill.rows = [createEmptyRow()];
+        } else {
+          state.currentBill.rows = state.currentBill.rows.filter((r) => r.id !== removeBtn.dataset.rowId);
+        }
+        saveState();
+        renderBillingGrid();
+        return;
+      }
+
+      const clearImg = e.target.closest('[data-clear-img]');
+      if (clearImg) {
+        const row = state.currentBill.rows.find((r) => r.id === clearImg.dataset.clearImg);
+        if (row) {
+          row.image = '';
+          saveState();
+          renderBillingGrid();
+        }
+        return;
+      }
+
+      const preview = e.target.closest('[data-preview-row]');
+      if (preview) {
+        const row = state.currentBill.rows.find((r) => r.id === preview.dataset.previewRow);
+        if (row && row.image) {
+          document.getElementById('imgPreviewTitle').textContent = row.itemName || 'Captured Item Photo';
+          document.getElementById('imgPreviewFull').src = row.image;
+          document.getElementById('imgPreviewModal').classList.remove('hidden');
+        }
+      }
+    });
+
+    document.getElementById('closeImgModalBtn').addEventListener('click', () => {
+      document.getElementById('imgPreviewModal').classList.add('hidden');
+    });
+
+    // Print / Save / New Bill
+    function buildAdminSummaryHtmlDocument() {
+      const bills = getFilteredSavedBills();
+      const totalBilled = bills.reduce((sum, b) => sum + (Number(b.grandTotal) || 0), 0);
+      const totalCollected = bills.reduce((sum, b) => sum + (Number(b.advancePaid) || 0) + (Number(b.finalPaid) || 0), 0);
+      const totalPending = bills.reduce((sum, b) => sum + (b.paymentStatus === 'paid' ? 0 : getBalanceDue(b)), 0);
+      const rowsHtml = bills.length
+        ? bills
+            .map((b) => {
+              const isPaid = b.paymentStatus === 'paid';
+              const adv = Number(b.advancePaid) || 0;
+              const fin = Number(b.finalPaid) || 0;
+              const bal = isPaid ? 0 : getBalanceDue(b);
+              return `<tr>
+                <td style="padding:8px; border-bottom:1px solid #e2e8f0; font-weight:700;">${escapeHtml(b.billNo)}</td>
+                <td style="padding:8px; border-bottom:1px solid #e2e8f0;">${escapeHtml(b.date)}</td>
+                <td style="padding:8px; border-bottom:1px solid #e2e8f0;">${escapeHtml(b.customerName || 'Walk-in')}${b.customerPhone ? '<br><small style="color:#64748b;">' + escapeHtml(b.customerPhone) + '</small>' : ''}</td>
+                <td style="padding:8px; border-bottom:1px solid #e2e8f0; text-align:right;">${formatINR(b.grandTotal)}</td>
+                <td style="padding:8px; border-bottom:1px solid #e2e8f0; text-align:right;">${formatINR(adv)}</td>
+                <td style="padding:8px; border-bottom:1px solid #e2e8f0; text-align:right;">${formatINR(fin)}</td>
+                <td style="padding:8px; border-bottom:1px solid #e2e8f0; text-align:right; font-weight:700; color:${bal === 0 ? '#047857' : '#dc2626'};">${formatINR(bal)}</td>
+                <td style="padding:8px; border-bottom:1px solid #e2e8f0; text-align:center; font-weight:700; color:${isPaid ? '#047857' : '#dc2626'};">${isPaid ? 'PAID' : 'UNPAID'}</td>
+              </tr>`;
+            })
+            .join('')
+        : '<tr><td colspan="8" style="padding:14px; text-align:center; color:#64748b;">No saved bills match the selected filters.</td></tr>';
+
+      return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bills Summary - ${escapeHtml(state.shop.name)}</title>
+        <style>body{font-family:Arial,sans-serif;padding:24px;color:#1e293b;}table{width:100%;border-collapse:collapse;margin:16px 0;}th{background:#fff7ed;color:${escapeHtml(state.themeColor || '#7c2d12')};font-size:12px;text-align:left;padding:8px;border-bottom:2px solid #fdba74;} .summary{display:flex;gap:18px;flex-wrap:wrap;background:#fff7ed;border:1.5px solid #fdba74;border-radius:10px;padding:10px 14px;font-weight:700;margin-top:10px;}</style>
+        </head><body>
+        <h2 style="margin:0;color:${escapeHtml(state.themeColor || '#7c2d12')};">${escapeHtml(state.shop.name)} — Saved Bills Summary</h2>
+        <p style="margin:4px 0 8px;color:#64748b;font-size:13px;">Filters: ${escapeHtml(getSavedFilterDescription())}</p>
+        <div class="summary">
+          <span>Bills: ${bills.length}</span>
+          <span>Total Billed: ${formatINR(totalBilled)}</span>
+          <span style="color:#047857;">Collected: ${formatINR(totalCollected)}</span>
+          <span style="color:#dc2626;">Pending: ${formatINR(totalPending)}</span>
+        </div>
+        <table><thead><tr><th>Bill No</th><th>Date</th><th>Customer</th><th style="text-align:right;">Total</th><th style="text-align:right;">Advance</th><th style="text-align:right;">Final</th><th style="text-align:right;">Balance</th><th style="text-align:center;">Status</th></tr></thead><tbody>${rowsHtml}</tbody></table>
+        <script>window.onload = function(){ try{ window.print(); }catch(e){} };<\/script>
+        </body></html>`;
+    }
+
+    function generateAdminSummaryPngCanvas() {
+      const bills = getFilteredSavedBills();
+      const totalBilled = bills.reduce((sum, b) => sum + (Number(b.grandTotal) || 0), 0);
+      const totalCollected = bills.reduce((sum, b) => sum + (Number(b.advancePaid) || 0) + (Number(b.finalPaid) || 0), 0);
+      const totalPending = bills.reduce((sum, b) => sum + (b.paymentStatus === 'paid' ? 0 : getBalanceDue(b)), 0);
+
+      const pad = 24;
+      const canvasW = 920;
+      const rowH = 34;
+      const canvas = document.createElement('canvas');
+      canvas.width = canvasW;
+      canvas.height = 240 + Math.max(1, bills.length) * rowH;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = state.themeColor || '#7c2d12';
+      ctx.fillRect(0, 0, canvas.width, 78);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 22px sans-serif';
+      ctx.fillText(`${state.shop.name || 'Embroidery & Stitching'} — Saved Bills Summary`, pad, 34);
+      ctx.font = '13px sans-serif';
+      ctx.fillStyle = '#fed7aa';
+      ctx.fillText(getSavedFilterDescription(), pad, 58);
+
+      let y = 104;
+      ctx.fillStyle = '#fff7ed';
+      ctx.fillRect(pad, y - 18, canvasW - pad * 2, 32);
+      ctx.fillStyle = '#1e293b';
+      ctx.font = 'bold 14px sans-serif';
+      ctx.fillText(`Bills: ${bills.length}   |   Total Billed: ${formatINR(totalBilled)}   |   Collected: ${formatINR(totalCollected)}   |   Pending: ${formatINR(totalPending)}`, pad + 10, y + 3);
+
+      y += 34;
+      ctx.fillStyle = state.themeColor || '#7c2d12';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText('BILL NO', pad, y);
+      ctx.fillText('DATE', 130, y);
+      ctx.fillText('CUSTOMER', 235, y);
+      ctx.textAlign = 'right';
+      ctx.fillText('TOTAL', 515, y);
+      ctx.fillText('ADVANCE', 610, y);
+      ctx.fillText('FINAL', 700, y);
+      ctx.fillText('BALANCE', 800, y);
+      ctx.textAlign = 'left';
+      ctx.fillText('STATUS', 830, y);
+
+      y += 10;
+      ctx.strokeStyle = '#fdba74';
+      ctx.beginPath();
+      ctx.moveTo(pad, y);
+      ctx.lineTo(canvasW - pad, y);
+      ctx.stroke();
+
+      y += 22;
+      if (!bills.length) {
+        ctx.fillStyle = '#64748b';
+        ctx.font = '14px sans-serif';
+        ctx.fillText('No saved bills match the selected filters.', pad, y);
+      } else {
+        bills.forEach((b) => {
+          const isPaid = b.paymentStatus === 'paid';
+          const adv = Number(b.advancePaid) || 0;
+          const fin = Number(b.finalPaid) || 0;
+          const bal = isPaid ? 0 : getBalanceDue(b);
+          ctx.fillStyle = '#1e293b';
+          ctx.font = 'bold 13px sans-serif';
+          ctx.fillText(String(b.billNo || '').slice(0, 12), pad, y);
+          ctx.font = '13px sans-serif';
+          ctx.fillText(String(b.date || ''), 130, y);
+          ctx.fillText(String(b.customerName || 'Walk-in').slice(0, 22), 235, y);
+          ctx.textAlign = 'right';
+          ctx.fillText(formatINR(b.grandTotal), 515, y);
+          ctx.fillText(formatINR(adv), 610, y);
+          ctx.fillText(formatINR(fin), 700, y);
+          ctx.fillStyle = bal === 0 ? '#047857' : '#dc2626';
+          ctx.fillText(formatINR(bal), 800, y);
+          ctx.textAlign = 'left';
+          ctx.font = 'bold 12px sans-serif';
+          ctx.fillStyle = isPaid ? '#047857' : '#dc2626';
+          ctx.fillText(isPaid ? 'PAID' : 'UNPAID', 830, y);
+          y += rowH;
+        });
+      }
+      return canvas;
+    }
+
+    function buildPrintableHtmlDocument() {
+      const b = state.currentBill;
+      const colsHtml = state.columns.map((c) => `<th style="text-align:right; padding:8px; border-bottom:2px solid #cbd5e1;">${escapeHtml(c.name)} (₹)</th>`).join('');
+      const rowsHtml = b.rows.map((r, i) => {
+        const rt = getRowTotal(r);
+        if (!r.itemName && rt === 0 && !r.image) return '';
+        const imgCell = r.image ? `<img src="${r.image}" style="width:44px; height:44px; object-fit:cover; border-radius:6px;" />` : '—';
+        const amtCells = state.columns.map((c) => `<td style="text-align:right; padding:8px; border-bottom:1px solid #e2e8f0;">${formatINR(r.amounts[c.id] || 0)}</td>`).join('');
+        const q = Math.max(1, Number(r.qty) || 1);
+        return `<tr><td style="padding:8px; border-bottom:1px solid #e2e8f0;">${i + 1}</td><td style="padding:8px; border-bottom:1px solid #e2e8f0;">${imgCell}</td><td style="padding:8px; border-bottom:1px solid #e2e8f0;">${escapeHtml(r.itemName || 'Item')}${q > 1 ? ' (×' + q + ')' : ''}</td>${amtCells}<td style="text-align:right; padding:8px; border-bottom:1px solid #e2e8f0; font-weight:700;">${formatINR(rt)}</td></tr>`;
+      }).join('');
+
+      return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${escapeHtml(b.billNo)} - ${escapeHtml(state.shop.name)}</title>
+        <style>body{font-family:Arial,sans-serif;padding:24px;color:#1e293b;}table{width:100%;border-collapse:collapse;margin:16px 0;}th{background:#fff7ed;color:#7c2d12;font-size:12px;text-align:left;padding:8px;border-bottom:2px solid #fdba74;} .box{max-width:320px;margin-left:auto;background:#fff7ed;border:2px solid #f97316;border-radius:10px;padding:12px;}</style>
+        </head><body>
+        <h2 style="margin:0;color:#7c2d12;">${escapeHtml(state.shop.name)}</h2>
+        <p style="margin:2px 0 12px;color:#64748b;font-size:13px;">${escapeHtml(state.shop.tagline)} ${state.shop.phone ? '• ' + escapeHtml(state.shop.phone) : ''}</p>
+        <p style="font-size:14px;"><strong>Bill No:</strong> ${escapeHtml(b.billNo)} &nbsp;|&nbsp; <strong>Date:</strong> ${escapeHtml(b.date)} &nbsp;|&nbsp; <strong>Customer:</strong> ${escapeHtml(b.customerName || 'Walk-in')} ${b.customerPhone ? '(' + escapeHtml(b.customerPhone) + ')' : ''}</p>
+        <table><thead><tr><th>#</th><th>Photo</th><th>Item</th>${colsHtml}<th style="text-align:right;">Row Total</th></tr></thead><tbody>${rowsHtml || '<tr><td colspan="10" style="padding:12px;text-align:center;color:#64748b;">No items entered</td></tr>'}</tbody></table>
+        <div class="box">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span>Subtotal:</span><strong>${formatINR(getSubtotal())}</strong></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span>Discount:</span><strong>− ${formatINR(b.discount || 0)}</strong></div>
+          <div style="display:flex;justify-content:space-between;border-top:1px dashed #fb923c;padding-top:8px;font-size:18px;color:#7c2d12;"><strong>Grand Total:</strong><strong>${formatINR(getGrandTotal())}</strong></div>
+        </div>
+        <script>window.onload = function(){ try{ window.print(); }catch(e){} };<\/script>
+        </body></html>`;
+    }
+
+    function openAdminSummaryPrintModal() {
+      const bills = getFilteredSavedBills();
+      const totalBilled = bills.reduce((sum, b) => sum + (Number(b.grandTotal) || 0), 0);
+      const totalCollected = bills.reduce((sum, b) => sum + (Number(b.advancePaid) || 0) + (Number(b.finalPaid) || 0), 0);
+      const totalPending = bills.reduce((sum, b) => sum + (b.paymentStatus === 'paid' ? 0 : getBalanceDue(b)), 0);
+
+      const rowsHtml = bills.length
+        ? bills
+            .map((b) => {
+              const isPaid = b.paymentStatus === 'paid';
+              const adv = Number(b.advancePaid) || 0;
+              const fin = Number(b.finalPaid) || 0;
+              const bal = isPaid ? 0 : getBalanceDue(b);
+              return `<tr>
+                <td style="padding:6px 8px; border-bottom:1px solid #e2e8f0; font-weight:700;">${escapeHtml(b.billNo)}</td>
+                <td style="padding:6px 8px; border-bottom:1px solid #e2e8f0;">${escapeHtml(b.date)}</td>
+                <td style="padding:6px 8px; border-bottom:1px solid #e2e8f0;">${escapeHtml(b.customerName || 'Walk-in')}</td>
+                <td style="padding:6px 8px; border-bottom:1px solid #e2e8f0; text-align:right;">${formatINR(b.grandTotal)}</td>
+                <td style="padding:6px 8px; border-bottom:1px solid #e2e8f0; text-align:right;">${formatINR(adv)}</td>
+                <td style="padding:6px 8px; border-bottom:1px solid #e2e8f0; text-align:right;">${formatINR(fin)}</td>
+                <td style="padding:6px 8px; border-bottom:1px solid #e2e8f0; text-align:right; font-weight:700; color:${bal === 0 ? '#047857' : '#dc2626'};">${formatINR(bal)}</td>
+                <td style="padding:6px 8px; border-bottom:1px solid #e2e8f0; text-align:center; font-weight:800; color:${isPaid ? '#047857' : '#dc2626'};">${isPaid ? 'PAID' : 'UNPAID'}</td>
+              </tr>`;
+            })
+            .join('')
+        : '<tr><td colspan="8" style="padding:12px; text-align:center; color:#64748b;">No saved bills match the current filters.</td></tr>';
+
+      document.getElementById('printPreviewBody').innerHTML = `
+        <div style="border-bottom:2px solid var(--brand); padding-bottom:8px; margin-bottom:10px;">
+          <strong style="font-size:1.05rem; color:var(--brand);">${escapeHtml(state.shop.name)} — Saved Bills Summary</strong>
+          <div style="font-size:0.78rem; color:#64748b; margin-top:2px;">${escapeHtml(getSavedFilterDescription())}</div>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; padding:8px 10px; background:var(--brand-soft); border:1px solid var(--brand-border); border-radius:8px; margin-bottom:10px; font-size:0.78rem; font-weight:700;">
+          <span>Bills: ${bills.length}</span>
+          <span>Total Billed: ${formatINR(totalBilled)}</span>
+          <span style="color:#047857;">Collected: ${formatINR(totalCollected)}</span>
+          <span style="color:#dc2626;">Pending: ${formatINR(totalPending)}</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.76rem;">
+            <thead>
+              <tr>
+                <th style="text-align:left; padding:6px 8px; border-bottom:2px solid var(--brand-border); background:var(--brand-soft); color:var(--brand);">Bill No</th>
+                <th style="text-align:left; padding:6px 8px; border-bottom:2px solid var(--brand-border); background:var(--brand-soft); color:var(--brand);">Date</th>
+                <th style="text-align:left; padding:6px 8px; border-bottom:2px solid var(--brand-border); background:var(--brand-soft); color:var(--brand);">Customer</th>
+                <th style="text-align:right; padding:6px 8px; border-bottom:2px solid var(--brand-border); background:var(--brand-soft); color:var(--brand);">Total</th>
+                <th style="text-align:right; padding:6px 8px; border-bottom:2px solid var(--brand-border); background:var(--brand-soft); color:var(--brand);">Advance</th>
+                <th style="text-align:right; padding:6px 8px; border-bottom:2px solid var(--brand-border); background:var(--brand-soft); color:var(--brand);">Final</th>
+                <th style="text-align:right; padding:6px 8px; border-bottom:2px solid var(--brand-border); background:var(--brand-soft); color:var(--brand);">Balance</th>
+                <th style="text-align:center; padding:6px 8px; border-bottom:2px solid var(--brand-border); background:var(--brand-soft); color:var(--brand);">Status</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+      `;
+      document.getElementById('printModal').classList.remove('hidden');
+      try {
+        window.print();
+      } catch (e) {}
+    }
+
+    function openPrintModal() {
+      if (state.activeTab === 'admin') {
+        openAdminSummaryPrintModal();
+        return;
+      }
+      const b = state.currentBill;
+      const colsHtml = state.columns
+        .map((c) => `<th style="text-align:right; padding:6px 8px; border-bottom:2px solid #fdba74; background:#fff7ed; color:#7c2d12; font-size:0.72rem; white-space:nowrap;">${escapeHtml(c.name)}</th>`)
+        .join('');
+
+      const activeRows = b.rows.filter((r) => r.itemName || getRowTotal(r) > 0 || r.image);
+      const rowsHtml = activeRows.length
+        ? activeRows
+            .map((r, i) => {
+              const rt = getRowTotal(r);
+              const imgCell = r.image
+                ? `<img src="${r.image}" style="width:36px; height:36px; object-fit:cover; border-radius:6px; border:1px solid #cbd5e1;" />`
+                : '—';
+              const amtCells = state.columns
+                .map((c) => `<td style="text-align:right; padding:6px 8px; border-bottom:1px solid #e2e8f0; white-space:nowrap;">${formatINR(r.amounts[c.id] || 0)}</td>`)
+                .join('');
+              const q = Math.max(1, Number(r.qty) || 1);
+              return `<tr>
+                <td style="padding:6px 8px; border-bottom:1px solid #e2e8f0; color:#64748b;">${i + 1}</td>
+                <td style="padding:6px 8px; border-bottom:1px solid #e2e8f0;">${imgCell}</td>
+                <td style="padding:6px 8px; border-bottom:1px solid #e2e8f0; font-weight:600;">${escapeHtml(r.itemName || 'Item')}${q > 1 ? ' <span style="color:#64748b;font-weight:700;">(×' + q + ')</span>' : ''}</td>
+                ${amtCells}
+                <td style="text-align:right; padding:6px 8px; border-bottom:1px solid #e2e8f0; font-weight:800; white-space:nowrap;">${formatINR(rt)}</td>
+              </tr>`;
+            })
+            .join('')
+        : `<tr><td colspan="${state.columns.length + 4}" style="padding:12px; text-align:center; color:#64748b;">No item amounts entered yet.</td></tr>`;
+
+      document.getElementById('printPreviewBody').innerHTML = `
+        <div style="border-bottom:2px solid #7c2d12; padding-bottom:8px; margin-bottom:10px;">
+          <strong style="font-size:1.05rem; color:#7c2d12;">${escapeHtml(state.shop.name)}</strong>
+          <div style="font-size:0.78rem; color:#64748b; margin-top:2px;">
+            Bill #${escapeHtml(b.billNo)} • ${escapeHtml(b.date)} • ${escapeHtml(b.customerName || 'Walk-in Customer')} ${b.customerPhone ? '(' + escapeHtml(b.customerPhone) + ')' : ''}
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.78rem;">
+            <thead>
+              <tr>
+                <th style="text-align:left; padding:6px 8px; border-bottom:2px solid #fdba74; background:#fff7ed; color:#7c2d12;">#</th>
+                <th style="text-align:left; padding:6px 8px; border-bottom:2px solid #fdba74; background:#fff7ed; color:#7c2d12;">Photo</th>
+                <th style="text-align:left; padding:6px 8px; border-bottom:2px solid #fdba74; background:#fff7ed; color:#7c2d12;">Item</th>
+                ${colsHtml}
+                <th style="text-align:right; padding:6px 8px; border-bottom:2px solid #fdba74; background:#fff7ed; color:#7c2d12;">Total</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px; max-width:300px; margin-left:auto; background:#fff7ed; border:1.5px solid #f97316; border-radius:8px; padding:8px 12px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:3px;"><span>Subtotal</span><strong>${formatINR(getSubtotal())}</strong></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Discount</span><strong>− ${formatINR(b.discount || 0)}</strong></div>
+          <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.05rem; color:#7c2d12; margin-top:4px; border-top:1px dashed #fdba74; padding-top:5px;"><span>Grand Total</span><span>${formatINR(getGrandTotal())}</span></div>
+        </div>
+      `;
+      document.getElementById('printModal').classList.remove('hidden');
+      try {
+        window.print();
+      } catch (e) {}
+    }
+
+    document.getElementById('printBillBtn').addEventListener('click', openPrintModal);
+    document.getElementById('closePrintModalBtn').addEventListener('click', () => {
+      document.getElementById('printModal').classList.add('hidden');
+    });
+    document.getElementById('tryBrowserPrintBtn').addEventListener('click', () => {
+      try {
+        window.print();
+      } catch (e) {
+        showToast('Browser print blocked in preview — use Download Bill Image or HTML');
+      }
+    });
+    document.getElementById('downloadHtmlBillBtn').addEventListener('click', () => {
+      const isAdmin = state.activeTab === 'admin';
+      const html = isAdmin ? buildAdminSummaryHtmlDocument() : buildPrintableHtmlDocument();
+      const blob = new Blob([html], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = isAdmin
+        ? `bills_summary_${todayISO()}.html`
+        : `${(state.currentBill.billNo || 'bill').replace(/[^a-zA-Z0-9_-]/g, '_')}.html`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast(isAdmin ? 'Printable summary HTML downloaded' : 'Printable HTML bill downloaded');
+    });
+    document.getElementById('downloadPngBillBtn').addEventListener('click', async () => {
+      if (state.activeTab === 'admin') {
+        downloadCanvasAsPng(generateAdminSummaryPngCanvas(), `bills_summary_${todayISO()}.png`);
+        showToast('Summary image (PNG) downloaded');
+      } else {
+        const b = state.currentBill;
+        const fileName = `${(b.billNo || 'bill').replace(/[^a-zA-Z0-9_-]/g, '_')}.png`;
+        downloadCanvasAsPng(await generateBillPngCanvas(), fileName);
+        showToast('Bill image (PNG) downloaded');
+      }
+    });
+
+    function saveCurrentBill(silent) {
+      const snap = JSON.parse(JSON.stringify(state.currentBill));
+      snap.subtotal = getSubtotal();
+      snap.grandTotal = getGrandTotal();
+
+      const existingIdx = snap.id
+        ? state.savedBills.findIndex((b) => b.id === snap.id)
+        : -1;
+
+      if (existingIdx >= 0) {
+        state.savedBills[existingIdx] = snap;
+        saveState();
+        renderBillMeta();
+        renderAdminPage();
+        if (!silent) showToast(`Updated ${snap.billNo} (${formatINR(snap.grandTotal)})`);
+      } else {
+        snap.id = 'bill_' + Date.now();
+        state.currentBill.id = snap.id;
+        state.savedBills.push(snap);
+        saveState();
+        renderBillMeta();
+        renderAdminPage();
+        if (!silent) showToast(`Saved ${snap.billNo} (${formatINR(snap.grandTotal)})`);
+      }
+    }
+
+    document.getElementById('saveBillBtn').addEventListener('click', () => saveCurrentBill(false));
+    document.getElementById('saveBillBottomBtn').addEventListener('click', () => saveCurrentBill(false));
+
+    document.getElementById('newBillBtn').addEventListener('click', () => {
+      state.nextBillSeq += 1;
+      state.currentBill = {
+        billNo: 'INV-' + state.nextBillSeq,
+        date: todayISO(),
+        deliveryDate: '',
+        customerName: '',
+        customerPhone: '',
+        discount: 0,
+        advancePaid: 0,
+        finalPaid: 0,
+        paymentStatus: 'unpaid',
+        rows: [createEmptyRow(), createEmptyRow()],
+      };
+      state.activeTab = 'billing';
+      saveState();
+      renderAll();
+      showToast(`Started ${state.currentBill.billNo}`);
+    });
+
+    function loadImageForCanvas(src) {
+      return new Promise((resolve) => {
+        if (!src) return resolve(null);
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = src;
+      });
+    }
+
+    async function generateBillPngCanvas() {
+      const b = state.currentBill;
+      const activeRows = b.rows.filter((r) => r.itemName || getRowTotal(r) > 0 || r.image);
+      const [loadedImgs, qrImg] = await Promise.all([
+        Promise.all(activeRows.map((r) => loadImageForCanvas(r.image))),
+        loadImageForCanvas(state.shop.qrImage || ''),
+      ]);
+
+      const scale = 2; // Crisp 2x retina PNG
+      const pad = 28;
+      const idxW = 34;
+      const itemW = 210;
+      const qtyW = 54;
+      const colW = 104;
+      const totalW = 112;
+      const canvasW = Math.max(820, pad * 2 + idxW + itemW + qtyW + state.columns.length * colW + totalW);
+
+      const hasAnyImg = loadedImgs.some(Boolean);
+      const rowH = hasAnyImg ? 52 : 40;
+      const headerH = 92;
+      const tableHeadH = 36;
+      const footerH = 165;
+      const canvasH = headerH + 20 + tableHeadH + Math.max(1, activeRows.length) * rowH + 24 + footerH;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = canvasW * scale;
+      canvas.height = canvasH * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(scale, scale);
+
+      // White background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvasW, canvasH);
+
+      // Brand header
+      const brand = state.themeColor || '#7c2d12';
+      ctx.fillStyle = brand;
+      ctx.fillRect(0, 0, canvasW, headerH);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      ctx.fillText(state.shop.name || 'Tailor Billing App', pad, 36);
+
+      ctx.font = '13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.88)';
+      const shopSub = [state.shop.tagline, state.shop.phone ? 'Ph: ' + state.shop.phone : ''].filter(Boolean).join('  •  ');
+      if (shopSub) ctx.fillText(shopSub, pad, 56);
+
+      ctx.font = 'bold 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(`Bill #${b.billNo}   |   Date: ${b.date}   |   Customer: ${b.customerName || 'Walk-in'}${b.customerPhone ? ' (' + b.customerPhone + ')' : ''}`, pad, 78);
+
+      // Table header
+      let y = headerH + 20;
+      ctx.fillStyle = '#fff7ed';
+      ctx.fillRect(pad, y, canvasW - pad * 2, tableHeadH);
+      ctx.fillStyle = brand;
+      ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('#', pad + 8, y + 22);
+      ctx.fillText('ITEM', pad + idxW, y + 22);
+
+      const qtyX = pad + idxW + itemW + qtyW / 2;
+      ctx.textAlign = 'center';
+      ctx.fillText('QTY', qtyX, y + 22);
+
+      const colsStartX = pad + idxW + itemW + qtyW;
+      ctx.textAlign = 'right';
+      state.columns.forEach((c, ci) => {
+        ctx.fillText(c.name.slice(0, 13).toUpperCase(), colsStartX + (ci + 1) * colW - 8, y + 22);
+      });
+      ctx.fillText('TOTAL', canvasW - pad - 8, y + 22);
+      ctx.textAlign = 'left';
+
+      y += tableHeadH;
+      ctx.strokeStyle = '#fdba74';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(pad, y);
+      ctx.lineTo(canvasW - pad, y);
+      ctx.stroke();
+
+      // Rows
+      if (!activeRows.length) {
+        ctx.fillStyle = '#64748b';
+        ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+        ctx.fillText('No items entered', pad + 8, y + 26);
+        y += rowH;
+      } else {
+        activeRows.forEach((r, idx) => {
+          const rt = getRowTotal(r);
+          const q = Math.max(1, Number(r.qty) || 1);
+          const midY = y + rowH / 2 + 5;
+
+          // Zebra tint
+          if (idx % 2 === 1) {
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(pad, y, canvasW - pad * 2, rowH);
+          }
+
+          ctx.fillStyle = '#64748b';
+          ctx.font = '13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText(String(idx + 1), pad + 8, midY);
+
+          let textX = pad + idxW;
+          const img = loadedImgs[idx];
+          if (img) {
+            const thumb = 38;
+            const imgY = y + (rowH - thumb) / 2;
+            ctx.save();
+            ctx.beginPath();
+            ctx.roundRect(textX, imgY, thumb, thumb, 6);
+            ctx.clip();
+            ctx.drawImage(img, textX, imgY, thumb, thumb);
+            ctx.restore();
+            textX += thumb + 10;
+          }
+
+          ctx.fillStyle = '#0f172a';
+          ctx.font = 'bold 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+          ctx.fillText((r.itemName || 'Item').slice(0, img ? 20 : 26), textX, midY);
+
+          ctx.textAlign = 'center';
+          ctx.font = 'bold 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+          ctx.fillStyle = '#334155';
+          ctx.fillText(String(q), qtyX, midY);
+
+          ctx.textAlign = 'right';
+          ctx.font = '13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+          ctx.fillStyle = '#334155';
+          state.columns.forEach((c, ci) => {
+            ctx.fillText(formatINR(r.amounts[c.id] || 0), colsStartX + (ci + 1) * colW - 8, midY);
+          });
+
+          ctx.font = 'bold 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+          ctx.fillStyle = '#0f172a';
+          ctx.fillText(formatINR(rt), canvasW - pad - 8, midY);
+          ctx.textAlign = 'left';
+
+          y += rowH;
+          ctx.strokeStyle = '#e2e8f0';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(pad, y);
+          ctx.lineTo(canvasW - pad, y);
+          ctx.stroke();
+        });
+      }
+
+      // Footer Summary & Payment Boxes
+      y += 20;
+      const rightBoxW = 340;
+      const rightBoxX = canvasW - pad - rightBoxW;
+      const leftBoxW = rightBoxX - pad - 18;
+      const boxH = 124;
+
+      // Optional Payment QR Box on far left when user uploaded QR scanner in Admin
+      let payBoxX = pad;
+      let payBoxW = leftBoxW;
+      if (qrImg) {
+        const qrBoxW = 122;
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(pad, y, qrBoxW, boxH, 10);
+        ctx.fill();
+        ctx.stroke();
+        ctx.drawImage(qrImg, pad + 17, y + 8, 88, 88);
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 10px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('SCAN & PAY', pad + qrBoxW / 2, y + 110);
+        ctx.textAlign = 'left';
+        payBoxX = pad + qrBoxW + 12;
+        payBoxW = leftBoxW - qrBoxW - 12;
+      }
+
+      // Left Payment Box
+      ctx.fillStyle = '#f8fafc';
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(payBoxX, y, payBoxW, boxH, 10);
+      ctx.fill();
+      ctx.stroke();
+
+      const adv = Number(b.advancePaid) || 0;
+      const fin = Number(b.finalPaid) || 0;
+      const isPaid = b.paymentStatus === 'paid';
+      const bal = isPaid ? 0 : getBalanceDue();
+
+      ctx.fillStyle = '#475569';
+      ctx.font = 'bold 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      ctx.fillText('PAYMENT DETAILS', payBoxX + 14, y + 26);
+      ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      ctx.fillText(`Advance Paid: ${formatINR(adv)}`, payBoxX + 14, y + 52);
+      ctx.fillText(`Final Payment: ${formatINR(fin)}`, payBoxX + 14, y + 74);
+      ctx.font = 'bold 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      ctx.fillStyle = isPaid ? '#047857' : '#dc2626';
+      ctx.fillText(`${isPaid ? 'PAID' : 'UNPAID'} • Due: ${formatINR(bal)}`, payBoxX + 14, y + 104);
+
+      // Right Grand Total Box
+      ctx.fillStyle = '#fff7ed';
+      ctx.strokeStyle = '#f97316';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(rightBoxX, y, rightBoxW, boxH, 10);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#475569';
+      ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      ctx.fillText('Subtotal:', rightBoxX + 18, y + 30);
+      ctx.textAlign = 'right';
+      ctx.fillText(formatINR(getSubtotal()), rightBoxX + rightBoxW - 18, y + 30);
+      ctx.textAlign = 'left';
+
+      ctx.fillText('Discount:', rightBoxX + 18, y + 56);
+      ctx.textAlign = 'right';
+      ctx.fillText('− ' + formatINR(b.discount || 0), rightBoxX + rightBoxW - 18, y + 56);
+      ctx.textAlign = 'left';
+
+      ctx.strokeStyle = '#fdba74';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(rightBoxX + 18, y + 72);
+      ctx.lineTo(rightBoxX + rightBoxW - 18, y + 72);
+      ctx.stroke();
+
+      ctx.fillStyle = brand;
+      ctx.font = 'bold 20px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      ctx.fillText('Grand Total:', rightBoxX + 18, y + 102);
+      ctx.textAlign = 'right';
+      ctx.fillText(formatINR(getGrandTotal()), rightBoxX + rightBoxW - 18, y + 102);
+      ctx.textAlign = 'left';
+
+      return canvas;
+    }
+
+    function isAndroidWebView() {
+      const ua = navigator.userAgent || '';
+      return /Android/i.test(ua) && (/\bwv\b/i.test(ua) || /; wv\)/i.test(ua));
+    }
+
+    function downloadCanvasAsPng(canvas, filename) {
+      if (isAndroidWebView()) {
+        showToast('Use 🖨️ Save as PDF or screenshot the bill preview (WebIntoApp blocks PNG downloads)');
+        return;
+      }
+      if (canvas.toBlob) {
+        canvas.toBlob((blob) => {
+          if (!blob) return;
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.download = filename;
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          setTimeout(() => URL.revokeObjectURL(url), 1500);
+        }, 'image/png');
+      } else {
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+
+    function buildWhatsAppPayload() {
+      const b = state.currentBill;
+      const lines = [];
+      lines.push(`*${state.shop.name}*`);
+      lines.push(`Bill: *${b.billNo}* | Date: ${b.date}`);
+      if (b.customerName) lines.push(`Customer: *${b.customerName}*`);
+      lines.push('');
+      b.rows.forEach((r, idx) => {
+        const rt = getRowTotal(r);
+        if (r.itemName || rt > 0) {
+          const parts = state.columns
+            .filter((c) => Number(r.amounts[c.id]) > 0)
+            .map((c) => `${c.name}: ${formatINR(r.amounts[c.id])}`);
+          const q = Math.max(1, Number(r.qty) || 1);
+          lines.push(`${idx + 1}. *${r.itemName || 'Item'}*${q > 1 ? ' (Qty: ' + q + ')' : ''} — ${formatINR(rt)}${parts.length ? ' (' + parts.join(', ') + ')' : ''}`);
+        }
+      });
+      lines.push('');
+      lines.push(`Subtotal: ${formatINR(getSubtotal())}`);
+      if (Number(b.discount) > 0) lines.push(`Discount: -${formatINR(b.discount)}`);
+      lines.push(`*Grand Total: ${formatINR(getGrandTotal())}*`);
+      if (Number(b.advancePaid) > 0) lines.push(`Advance Paid: ${formatINR(b.advancePaid)}`);
+      if (Number(b.finalPaid) > 0) lines.push(`Final Payment: ${formatINR(b.finalPaid)}`);
+      const isPaid = b.paymentStatus === 'paid';
+      lines.push(`Status: *${isPaid ? 'PAID' : 'UNPAID'}*${!isPaid ? ' (Balance: ' + formatINR(getBalanceDue()) + ')' : ''}`);
+      lines.push('Thank you!');
+
+      const msg = lines.join('\n');
+      const digits = String(b.customerPhone || '').replace(/\D/g, '');
+      const phone = digits.length === 10 ? '91' + digits : digits;
+      const url = phone
+        ? `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`
+        : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+      return { msg, url };
+    }
+
+    // Share Bill PNG on WhatsApp
+    document.getElementById('shareBillWaBtn').addEventListener('click', async () => {
+      saveCurrentBill(true);
+      const b = state.currentBill;
+      const { msg, url } = buildWhatsAppPayload();
+      const canvas = await generateBillPngCanvas();
+      const fileName = `${(b.billNo || 'bill').replace(/[^a-zA-Z0-9_-]/g, '_')}.png`;
+      const dataUrl = canvas.toDataURL('image/png');
+
+      document.getElementById('waBillPngPreview').src = dataUrl;
+      const dlLink = document.getElementById('waDownloadPngAgainBtn');
+      dlLink.href = dataUrl;
+      dlLink.download = fileName;
+      document.getElementById('waModalText').value = msg;
+      document.getElementById('waModalLink').href = url;
+
+      try {
+        const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'));
+        const file = blob ? new File([blob], fileName, { type: 'image/png' }) : null;
+        if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: `${state.shop.name} - ${b.billNo}`,
+            text: msg,
+          });
+          showToast('Bill PNG shared!');
+          return;
+        }
+      } catch (e) {
+        if (e && e.name === 'AbortError') return;
+      }
+
+      downloadCanvasAsPng(canvas, fileName);
+      document.getElementById('waModal').classList.remove('hidden');
+      showToast('Bill PNG downloaded — attach or paste into WhatsApp');
+    });
+
+    document.getElementById('waShareNativeBtn').addEventListener('click', async () => {
+      const b = state.currentBill;
+      const { msg, url } = buildWhatsAppPayload();
+      const canvas = await generateBillPngCanvas();
+      const fileName = `${(b.billNo || 'bill').replace(/[^a-zA-Z0-9_-]/g, '_')}.png`;
+      try {
+        const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'));
+        const file = blob ? new File([blob], fileName, { type: 'image/png' }) : null;
+        if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: `${state.shop.name} - ${b.billNo}`, text: msg });
+          showToast('Bill PNG shared!');
+          return;
+        }
+      } catch (e) {}
+      window.open(url, '_blank', 'noopener,noreferrer');
+      showToast('Direct file share unsupported here — attach downloaded PNG in WhatsApp');
+    });
+
+    document.getElementById('waDownloadPngAgainBtn').addEventListener('click', (e) => {
+      if (isAndroidWebView()) {
+        e.preventDefault();
+        showToast('Use 🖨️ Save as PDF or screenshot the bill preview (WebIntoApp blocks PNG downloads)');
+        return;
+      }
+      showToast('Downloading Bill PNG...');
+    });
+
+    document.getElementById('waPrintPdfBtn').addEventListener('click', () => {
+      document.getElementById('waModal').classList.add('hidden');
+      setTimeout(() => window.print(), 150);
+    });
+    document.getElementById('closeWaModalBtn').addEventListener('click', () => {
+      document.getElementById('waModal').classList.add('hidden');
+    });
+    document.getElementById('waCopyPngBtn').addEventListener('click', async () => {
+      try {
+        const canvas = await generateBillPngCanvas();
+        const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'));
+        if (blob && navigator.clipboard && window.ClipboardItem) {
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          showToast('Bill PNG copied! Paste directly into WhatsApp');
+          return;
+        }
+      } catch (e) {}
+      showToast('Image copy not supported in this browser — use Download PNG');
+    });
+
+    document.getElementById('copyWaModalBtn').addEventListener('click', () => {
+      const el = document.getElementById('waModalText');
+      const txt = el.value;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(() => showToast('Bill text copied!')).catch(() => {
+          el.select();
+          document.execCommand('copy');
+          showToast('Bill text copied!');
+        });
+      } else {
+        el.select();
+        document.execCommand('copy');
+        showToast('Bill text copied!');
+      }
+    });
+
+    // Admin: Collapsible Sections (Initially Collapsed)
+    function setupCollapsibleSection(headerId, bodyId, badgeId) {
+      const header = document.getElementById(headerId);
+      const body = document.getElementById(bodyId);
+      const badge = document.getElementById(badgeId);
+      if (!header || !body || !badge) return;
+      header.addEventListener('click', () => {
+        const isHidden = body.classList.toggle('hidden');
+        badge.textContent = isHidden ? '▼ Open' : '▲ Close';
+      });
+    }
+    setupCollapsibleSection('toggleBillingColsHeader', 'billingColsBody', 'billingColsToggleBadge');
+    setupCollapsibleSection('toggleSizeOptionsHeader', 'sizeOptionsBody', 'sizeOptionsToggleBadge');
+
+    // Admin: Add Column
+    document.getElementById('addColumnForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('newColumnName');
+      const name = input.value.trim();
+      if (!name) return;
+      state.columns.push({ id: 'col_' + Date.now(), name });
+      input.value = '';
+      saveState();
+      renderAll();
+      showToast(`Added column "${name}"`);
+    });
+
+    // Admin: Rename / Move / Delete Columns
+    const adminCols = document.getElementById('adminColumnsList');
+    adminCols.addEventListener('change', (e) => {
+      const inp = e.target.closest('.admin-col-rename');
+      if (!inp) return;
+      const col = state.columns.find((c) => c.id === inp.dataset.colId);
+      if (col) {
+        col.name = inp.value.trim() || col.name;
+        saveState();
+        renderBillingGrid();
+        showToast('Column renamed');
+      }
+    });
+
+    adminCols.addEventListener('click', (e) => {
+      const moveBtn = e.target.closest('.move-col-btn');
+      if (moveBtn) {
+        const idx = state.columns.findIndex((c) => c.id === moveBtn.dataset.colId);
+        const target = idx + Number(moveBtn.dataset.dir);
+        if (idx >= 0 && target >= 0 && target < state.columns.length) {
+          const [item] = state.columns.splice(idx, 1);
+          state.columns.splice(target, 0, item);
+          saveState();
+          renderAll();
+        }
+        return;
+      }
+
+      const delBtn = e.target.closest('.delete-col-btn');
+      if (delBtn) {
+        if (state.columns.length <= 1) {
+          showToast('Keep at least 1 charge column');
+          return;
+        }
+        state.columns = state.columns.filter((c) => c.id !== delBtn.dataset.colId);
+        saveState();
+        renderAll();
+        showToast('Column removed');
+      }
+    });
+
+    // Admin: Add / Rename / Move / Delete Size Chart Options
+    document.getElementById('addSizeOptionForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('newSizeOptionName');
+      const name = input.value.trim();
+      if (!name) return;
+      state.sizeOptions.push({ id: 'sz_' + Date.now(), name });
+      input.value = '';
+      saveState();
+      renderAll();
+      showToast(`Added measurement option "${name}"`);
+    });
+
+    const adminSizeOpts = document.getElementById('adminSizeOptionsList');
+    adminSizeOpts.addEventListener('change', (e) => {
+      const inp = e.target.closest('.admin-size-opt-rename');
+      if (!inp) return;
+      const opt = state.sizeOptions.find((o) => o.id === inp.dataset.optId);
+      if (opt) {
+        opt.name = inp.value.trim() || opt.name;
+        saveState();
+        showToast('Measurement option renamed');
+      }
+    });
+
+    adminSizeOpts.addEventListener('click', (e) => {
+      const moveBtn = e.target.closest('.move-size-opt-btn');
+      if (moveBtn) {
+        const idx = state.sizeOptions.findIndex((o) => o.id === moveBtn.dataset.optId);
+        const target = idx + Number(moveBtn.dataset.dir);
+        if (idx >= 0 && target >= 0 && target < state.sizeOptions.length) {
+          const [item] = state.sizeOptions.splice(idx, 1);
+          state.sizeOptions.splice(target, 0, item);
+          saveState();
+          renderAdminPage();
+        }
+        return;
+      }
+
+      const delBtn = e.target.closest('.delete-size-opt-btn');
+      if (delBtn) {
+        if (state.sizeOptions.length <= 1) {
+          showToast('Keep at least 1 measurement option');
+          return;
+        }
+        state.sizeOptions = state.sizeOptions.filter((o) => o.id !== delBtn.dataset.optId);
+        saveState();
+        renderAdminPage();
+        showToast('Measurement option removed');
+      }
+    });
+
+    // Admin: Shop settings
+    document.getElementById('adminShopName').addEventListener('input', (e) => {
+      state.shop.name = e.target.value;
+      saveState();
+      renderHeaderAndTabs();
+    });
+    document.getElementById('adminShopSub').addEventListener('input', (e) => {
+      state.shop.tagline = e.target.value;
+      saveState();
+      renderHeaderAndTabs();
+    });
+    document.getElementById('adminShopPhone').addEventListener('input', (e) => {
+      state.shop.phone = e.target.value;
+      saveState();
+      renderHeaderAndTabs();
+    });
+    document.getElementById('adminShopUpi').addEventListener('input', (e) => {
+      state.shop.upiId = e.target.value;
+      saveState();
+    });
+    document.getElementById('adminShopQrInput').addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      compressImageFile(file, (dataUrl) => {
+        state.shop.qrImage = dataUrl;
+        saveState();
+        renderAdminPage();
+        showToast('Payment QR scanner updated');
+      });
+      e.target.value = '';
+    });
+    document.getElementById('removeQrBtn').addEventListener('click', () => {
+      state.shop.qrImage = '';
+      saveState();
+      renderAdminPage();
+      showToast('Payment QR removed');
+    });
+    document.getElementById('exportBackupBtn').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `embroidery_billing_backup_${todayISO()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      showToast('Full JSON backup downloaded');
+    });
+    document.getElementById('importBackupInput').addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const parsed = JSON.parse(ev.target.result);
+          if (!parsed || !Array.isArray(parsed.columns) || !parsed.currentBill) {
+            showToast('Invalid backup file');
+            return;
+          }
+          state = parsed;
+          if (!Array.isArray(state.sizeOptions) || !state.sizeOptions.length) {
+            state.sizeOptions = JSON.parse(JSON.stringify(DEFAULT_SIZE_OPTIONS));
+          }
+          ensureBillRowSizeCharts(state.currentBill, state.sizeOptions);
+          if (!Array.isArray(state.savedBills)) state.savedBills = [];
+          if (!Array.isArray(state.presets)) state.presets = [];
+          saveState();
+          renderAll();
+          showToast(`Restored ${state.savedBills.length} bill(s) from backup`);
+        } catch (err) {
+          showToast('Could not read backup JSON');
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    });
+
+    // Admin: Saved Bills Search & Filters
+    document.getElementById('savedBillSearchInput').addEventListener('input', renderAdminPage);
+    document.getElementById('savedBillStatusFilter').addEventListener('change', renderAdminPage);
+    document.getElementById('savedBillDateFilter').addEventListener('change', renderAdminPage);
+    document.getElementById('clearSavedFiltersBtn').addEventListener('click', () => {
+      document.getElementById('savedBillSearchInput').value = '';
+      document.getElementById('savedBillStatusFilter').value = 'all';
+      document.getElementById('savedBillDateFilter').value = '';
+      renderAdminPage();
+    });
+
+    function csvCell(val) {
+      const str = String(val == null ? '' : val);
+      return '"' + str.replace(/"/g, '""') + '"';
+    }
+
+    document.getElementById('exportBillsExcelBtn').addEventListener('click', () => {
+      const bills = getFilteredSavedBills();
+      if (!bills.length) {
+        showToast('No saved bills to export');
+        return;
+      }
+
+      const headers = [
+        'Bill No',
+        'Date',
+        'Customer Name',
+        'WhatsApp / Phone',
+        'Items',
+        'Subtotal (INR)',
+        'Discount (INR)',
+        'Grand Total (INR)',
+        'Advance Paid (INR)',
+        'Final Payment (INR)',
+        'Balance Due (INR)',
+        'Status',
+      ];
+
+      let totGrand = 0;
+      let totAdv = 0;
+      let totFin = 0;
+      let totBal = 0;
+
+      const dataRows = bills.map((b) => {
+        const isPaid = b.paymentStatus === 'paid';
+        const sub = Number(b.subtotal) || 0;
+        const disc = Number(b.discount) || 0;
+        const grand = Number(b.grandTotal) || 0;
+        const adv = Number(b.advancePaid) || 0;
+        const fin = Number(b.finalPaid) || 0;
+        const bal = isPaid ? 0 : getBalanceDue(b);
+
+        totGrand += grand;
+        totAdv += adv;
+        totFin += fin;
+        totBal += bal;
+
+        const itemsText = (b.rows || [])
+          .filter((r) => r.itemName || getRowTotal(r) > 0)
+          .map((r) => {
+            const q = Math.max(1, Number(r.qty) || 1);
+            return `${r.itemName || 'Item'}${q > 1 ? ' x' + q : ''}`;
+          })
+          .join('; ');
+
+        return [
+          csvCell(b.billNo),
+          csvCell(b.date),
+          csvCell(b.customerName || 'Walk-in'),
+          csvCell(b.customerPhone || ''),
+          csvCell(itemsText),
+          sub,
+          disc,
+          grand,
+          adv,
+          fin,
+          bal,
+          csvCell(isPaid ? 'PAID' : 'UNPAID'),
+        ].join(',');
+      });
+
+      const totalRow = [
+        csvCell('TOTAL'),
+        csvCell(`${bills.length} Bills`),
+        csvCell(''),
+        csvCell(''),
+        csvCell(''),
+        '',
+        '',
+        totGrand,
+        totAdv,
+        totFin,
+        totBal,
+        csvCell(''),
+      ].join(',');
+
+      const csvContent = '\uFEFF' + [headers.map(csvCell).join(','), ...dataRows, totalRow].join('\r\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `saved_bills_${todayISO()}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      showToast(`Exported ${bills.length} bill(s) to Excel CSV`);
+    });
+
+    // Admin: Saved Bills actions
+    document.getElementById('savedBillsList').addEventListener('click', (e) => {
+      const toggleBtn = e.target.closest('.toggle-saved-status-btn');
+      if (toggleBtn) {
+        const found = state.savedBills.find((b) => b.id === toggleBtn.dataset.billId);
+        if (found) {
+          found.paymentStatus = found.paymentStatus === 'paid' ? 'unpaid' : 'paid';
+          saveState();
+          renderAdminPage();
+          showToast(`${found.billNo} marked ${found.paymentStatus.toUpperCase()}`);
+        }
+        return;
+      }
+      const loadBtn = e.target.closest('.load-saved-bill-btn');
+      if (loadBtn) {
+        const found = state.savedBills.find((b) => b.id === loadBtn.dataset.billId);
+        if (found) {
+          state.currentBill = JSON.parse(JSON.stringify(found));
+          ensureBillRowSizeCharts(state.currentBill, state.sizeOptions);
+          state.activeTab = 'billing';
+          saveState();
+          renderAll();
+          showToast(`Loaded ${found.billNo}`);
+        }
+        return;
+      }
+      const delBtn = e.target.closest('.delete-saved-bill-btn');
+      if (delBtn) {
+        state.savedBills = state.savedBills.filter((b) => b.id !== delBtn.dataset.billId);
+        saveState();
+        renderAdminPage();
+        showToast('Saved bill deleted');
+      }
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>
